@@ -1,4 +1,4 @@
-#pragma config(Motor, port1, leftmotor, tmotorVex393_HBridge, openloop)     // motor 1
+#pragma config(Motor, port2, leftmotor, tmotorVex393_HBridge, openloop)     // motor 1
 #pragma config(Motor, port10, rightmotor， tmotorVex393_HBridge, openloop)  // motor 2
 
 task main(){
