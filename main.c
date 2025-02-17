@@ -44,9 +44,4 @@ catcher motor
 task main()
 {
 
-enum LED_STATE {
-	OFF = 0;
-	ON = 1;
-}
-
 }
