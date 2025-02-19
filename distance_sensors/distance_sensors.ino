@@ -45,7 +45,7 @@ enum robotState {
 };
 robotState robot_state = BLANK;
 
-// only after 3 counts, then declare that the state is correct; this is to correct the random surges
+// only after 5 counts, then declare that the state is correct; this is to correct the random surges
 robotState detected_state = BLANK;
 robotState previous_detected_state = BLANK;
 int state_counter = 0;
