@@ -92,7 +92,7 @@ void robot_state_machine() {
     previous_detected_state = detected_state;
 
 
-    if (state_counter >= 2 && robot_state != detected_state) {
+    if (state_counter >= 5 && robot_state != detected_state) {
         robot_state = detected_state;
 
         switch(robot_state) {
@@ -130,5 +130,5 @@ void distance_calculator() {
         }
     }
     Serial.println();
-    delay(500);
+    delay(60);
 }
