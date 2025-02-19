@@ -28,6 +28,11 @@ int sharp_sensors[] = {sharp_long0, sharp_long1, sharp_long2, sharp_short};
 float voltage[num_sensors];
 float distance[num_sensors];
 
+// for median filtering of distance sensor values to improve accuracy
+const int filter_window_size = 5;
+float sensor_readings[num_sensors][filter_window_size];
+int filter_index = 0;
+
 const char * robotStateNames[] = {
     "ROBOT_DETECTED",
     "BALL_DETECTED",
@@ -115,20 +120,41 @@ void robot_state_machine() {
 
 void distance_calculator() {
     for (int i = 0; i < num_sensors; i++) {
-        voltage[i] = analogRead(sharp_sensors[i]) * (5.0 / 1023.0);
+        // Read raw voltage and convert to distance
+        float raw_voltage = analogRead(sharp_sensors[i]) * (5.0 / 1023.0);
+        float raw_distance = (i < 3) ? 27.86 * pow(raw_voltage, -1.15)  // Long-range sensors
+                                     : 13.00 * pow(raw_voltage, -1.10); // Short-range sensor
         
-        if (i < 3) {
-        distance[i] = 27.86 * pow(voltage [i], -1.15); // for long sharp dist sensors
-        }
-        else {
-        distance[i] = 13.00 * pow(voltage[i], -1.10);   // for short sharp dist sensors
-        }
+        // Store new reading in the filter buffer
+        sensor_readings[i][filter_index] = raw_distance;
+
+        // Copy to a temporary array for sorting
+        float sorted_window[filter_window_size];
+        memcpy(sorted_window, sensor_readings[i], sizeof(sorted_window));
+
+        // Sort the array using bubble sort
+        bubble_sort(sorted_window, filter_window_size);
+
+        // Assign median value as the filtered distance
+        distance[i] = sorted_window[filter_window_size / 2];
 
         Serial.print(distance[i]);
-        if (i < num_sensors -1) {
-        Serial.print(", ");
+        if (i < num_sensors - 1) Serial.print(", ");
+    }
+
+    Serial.println();
+    filter_index = (filter_index + 1) % filter_window_size; // Update circular buffer index
+    delay(60);
+}
+
+void bubble_sort(float arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                float temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
         }
     }
-    Serial.println();
-    delay(60);
 }
