@@ -2,11 +2,11 @@
 #pragma config(Sensor, in2,    dist_long1,     sensorAnalog)
 #pragma config(Sensor, in3,    dist_long2,     sensorAnalog)
 #pragma config(Sensor, in4,    dist_short,     sensorAnalog)
-#pragma config(Sensor, in5,    line_FL,        sensorAnalog)
-#pragma config(Sensor, in6,    line_FR,        sensorAnalog)
-#pragma config(Sensor, in7,    line_BL,        sensorAnalog)
-#pragma config(Sensor, in8,    line_BR,        sensorAnalog)
 #pragma config(Sensor, dgtl1,  encoder,        sensorQuadEncoder)
+#pragma config(Sensor, dgtl5,  line_FL,        sensorDigitalIn)
+#pragma config(Sensor, dgtl6,  line_FR,        sensorDigitalIn)
+#pragma config(Sensor, dgtl7,  line_BL,        sensorDigitalIn)
+#pragma config(Sensor, dgtl8,  line_BR,        sensorDigitalIn)
 #pragma config(Sensor, dgtl9,  ball_switch,    sensorTouch)
 #pragma config(Sensor, dgtl10, bumper_L,       sensorTouch)
 #pragma config(Sensor, dgtl11, bumper_R,       sensorTouch)
@@ -37,7 +37,7 @@ distance Sensors
 - 2Y0A21 F 09 * 1 (10 to 80cm)
 - 0A41SK * 1 (4 to 30cm)
 
-10 to 20cm
+10 to 20cm0
 
 
 limit switch
@@ -85,6 +85,14 @@ Analog inputs (8)
 */
 
 #include "distance_sensors.c"
+#include "line_sensor.c"
+
+int test;
+byte left;
+byte right;
+byte front;
+byte back;
+
 
 float bumper_hit;
 
@@ -183,10 +191,22 @@ task detect_reached_base() {
 	}
 }
 
+task line_detection(){
+	while(true){
+		left =  !SensorValue[line_FL] << 0;
+	 	right =  !SensorValue[line_FR] <<1 ;
+		front =  !SensorValue[line_BL] <<2;
+		back =   !SensorValue[line_BR] <<3;
+		test =  back | front | left| right;
+		reactToSensors(test);
+	}
+}
+
 task begin() {
 	//move_field();
 	startTask(detection);
 	startTask(detect_reached_base);
+	startTask(line_detection);
 }
 
 task full_stop() {
@@ -207,5 +227,8 @@ void wait_for_on() {
 
 task main() {
 	wait_for_on();
-	while (true) {}
+
+	while (true) {
+
+	}
 }
