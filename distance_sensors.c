@@ -6,13 +6,6 @@ float distance_long0;	// robot front checker
 float distance_long1;	// robot rear checker
 float distance_long2;	// ball finder
 
-const string robotStateNames[4] = {
-	"BALL_DETECTED",
-	"ROBOT_FRONT_DETECTED",
-  "ROBOT_REAR_DETECTED",
-  "BLANK",
-};
-
 enum robotState {
     ROBOT_FRONT_DETECTED,
     BALL_DETECTED,
@@ -48,7 +41,7 @@ void robot_state_machine() {
     else if (distance_long1 < 15) {
 		detected_state = ROBOT_REAR_DETECTED;
 	}
-	else if (((distance_long0 >15)) && (distance_long2 < 40)) {
+	else if (((distance_long0 > 15)) && (distance_long2 < 40)) {
 		detected_state = BALL_DETECTED;
 		}
     else {

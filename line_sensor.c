@@ -7,6 +7,7 @@ float rightback_action;
 float leftback_action;
 float rightforward_action;
 float leftforward_action;
+
 // Enum to represent the state of the sensors
 enum LineSensors {
     NONE = 0,
@@ -27,54 +28,63 @@ void reactToSensors(int sensorState) {
     leftback_action=0;
     rightforward_action=0;
     leftforward_action=0;
+
     switch (sensorState) {
         case 0: //NONE
-        right_action =0;
-        left_action=0;
-        forward_action=0;
-        backward_action=0;
+        right_action = 0;
+        left_action = 0;
+        forward_action = 0;
+        backward_action = 0;
         forwardbackward_action = 0;
-        rightback_action=0;
-        leftback_action=0;
-        rightforward_action=0;
-        leftforward_action=0;
-        //No action
+        rightback_action = 0;
+        leftback_action = 0;
+        rightforward_action = 0;
+        leftforward_action = 0;
+            //No action
+            break;
 
-            break;
         case 1: //LEFT
-        left_action  = 1;
-        //Right action
+        left_action = 1;
+            //Right action
             break;
+
         case 2: //RIGHT
         right_action = 1;
         //Left action
             break;
+
         case 3: //LEFT | RIGHT
         forwardbackward_action = 1;
         //left_action = 0;
         //right_action = 0;
         //Forward or backward action
             break;
+
         case 4: //FRONT
         backward_action = 1;
         // Backward action
             break;
+
         case 8: //BACK
-        forward_action  = 1;
+        forward_action = 1;
         // Forward action
             break;
+
         case 5:
         rightback_action = 1;
         // Right backward action
             break;
+
         case 6://RIGHT | FRONT
         leftback_action = 1;
         // Left backward action
             break;
+
         case 9://LEFT | BACK
         rightforward_action = 1;
         // Right forward action
             break;
+
         case 10: //RIGHT | BACK
         leftforward_action = 1;
         // Left forward action
