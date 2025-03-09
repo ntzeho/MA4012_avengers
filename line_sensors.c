@@ -9,7 +9,7 @@ float rightforward_action;
 float leftforward_action;
 
 // Enum to represent the state of the sensors
-enum LineSensors {
+enum lineSensors {
     NONE = 0,
     LEFT = 1 << 0,      // 0001
     RIGHT = 1 << 1,     // 0010
@@ -18,7 +18,7 @@ enum LineSensors {
 };
 
 // Function to react based on the sensor states
-void reactToSensors(int sensorState) {
+void react_to_sensors(int sensorState) {
     right_action =0;
     left_action=0;
     forward_action=0;
