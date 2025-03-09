@@ -73,3 +73,19 @@ void robot_state_machine() {
         state_counter = 1;
     }
 }
+
+/*
+task test_short_sensor() {
+	while (true) {
+		float voltage_short = (SensorValue [dist_short]) * (5.0 / 4096.0);
+		float distance_short = pow(2.7818281828, 2.507) * pow(voltage_short , -1.123);
+		while (distance_short < 30) {
+			drive(1, 30);
+			if (distance_short < 4) {
+				motor [ball_in_motor] = 30;
+				break;
+			}
+		}
+	}
+}
+*/
