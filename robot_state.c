@@ -1,6 +1,6 @@
 enum robotState {
     // line sensor
-    LINE_SESNOR_DETECTED,           // line sensor detected, ignore all get back in game
+    LINE_SENSOR_DETECTED,           // line sensor detected, ignore all get back in game
     // long dist sensors for robot
     ROBOT_FRONT_DETECTED_BALL_IN,   // just continue moving backwards to home
     ROBOT_FRONT_DETECTED_BALL_OUT,  // evasive motion, continue
