@@ -7,14 +7,13 @@
 #pragma config(Sensor, dgtl2,  compass_south,  sensorDigitalIn)
 #pragma config(Sensor, dgtl3,  compass_east,   sensorDigitalIn)
 #pragma config(Sensor, dgtl4,  compass_north,  sensorDigitalIn)
-#pragma config(Sensor, dgtl5,  line_FL,        sensorDigitalIn)
-#pragma config(Sensor, dgtl6,  line_FR,        sensorDigitalIn)
-#pragma config(Sensor, dgtl7,  line_BL,        sensorDigitalIn)
-#pragma config(Sensor, dgtl8,  line_BR,        sensorDigitalIn)
-#pragma config(Sensor, dgtl9,  ball_switch,    sensorTouch)
-#pragma config(Sensor, dgtl10, bumper_L,       sensorTouch)
-#pragma config(Sensor, dgtl11, bumper_R,       sensorTouch)
-#pragma config(Sensor, dgtl12, compass_supply, sensorDigitalOut)
+#pragma config(Sensor, dgtl6,  line_FL,        sensorDigitalIn)
+#pragma config(Sensor, dgtl7,  line_FR,        sensorDigitalIn)
+#pragma config(Sensor, dgtl8,  line_BL,        sensorDigitalIn)
+#pragma config(Sensor, dgtl9,  line_BR,        sensorDigitalIn)
+#pragma config(Sensor, dgtl10, ball_switch,    sensorTouch)
+#pragma config(Sensor, dgtl11, bumper_L,       sensorTouch)
+#pragma config(Sensor, dgtl12, bumper_R,       sensorTouch)
 #pragma config(Motor,  port2,           left_motor,    tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port4,           ball_out_motor, tmotorServoContinuousRotation, openLoop)
 #pragma config(Motor,  port5,           ball_in_motor, tmotorServoContinuousRotation, openLoop)
@@ -90,14 +89,14 @@ task action() {
 			if (distance_long1 < 20 && SensorValue [ball_switch] == 0 && distance_long0 > 20) { //to change to same indentation lvl as prev
 				collect_ball();
 			}
-		} else if (SensorValue [ball_switch] == 1) { //collected ball
-			stop_movement();
-			//add code to change state to return to base
-		} else if (SensorValue [bumper_L] == 1 && SensorValue [bumper_R] == 1 && distance_long2 >= 15 && SensorValue [ball_switch] == 1) {
+		} else if (SensorValue [bumper_L] == 1 && SensorValue [bumper_R] == 1 && distance_long1 >= 15 && SensorValue [ball_switch] == 1) {
 			stop_movement();
 			deposit_ball();
 			move_field();
-		}	else {
+		} else if (SensorValue [ball_switch] == 1) { //collected ball
+			motor [ball_in_motor] = 0;
+			//add code to change state to return to base
+		} else {
 			stop_movement();
 		}
 	}

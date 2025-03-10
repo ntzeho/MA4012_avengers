@@ -11,7 +11,6 @@ void turn(int direction, int speed) {
 void stop_movement() {
     motor [left_motor] = 0;
     motor [right_motor] = 0;
-    motor [ball_in_motor] = 0;
 }
 
 void move_field() { //move to just over halfway point to begin searching for balls
@@ -27,13 +26,13 @@ void move_field() { //move to just over halfway point to begin searching for bal
 }
 
 void collect_ball() {
-    motor [ball_in_motor] = 60;
+    motor [ball_in_motor] = 127;
     drive(1,15);
 }
 
 void deposit_ball() {
-    motor [ball_out_motor] = 60;
-    sleep(3000);
+    motor [ball_out_motor] = -127;
+    sleep(2000);
     motor [ball_out_motor] = 0;
     sleep(10);
 }
