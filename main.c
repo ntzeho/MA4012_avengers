@@ -2,7 +2,11 @@
 #pragma config(Sensor, in2,    dist_long1,     sensorAnalog)
 #pragma config(Sensor, in3,    dist_long2,     sensorAnalog)
 #pragma config(Sensor, in4,    dist_short,     sensorAnalog)
-#pragma config(Sensor, dgtl1,  encoder,        sensorQuadEncoder)
+#pragma config(Sensor, in5,    on_switch,      sensorAnalog)
+#pragma config(Sensor, dgtl1,  compass_west,   sensorDigitalIn)
+#pragma config(Sensor, dgtl2,  compass_south,  sensorDigitalIn)
+#pragma config(Sensor, dgtl3,  compass_east,   sensorDigitalIn)
+#pragma config(Sensor, dgtl4,  compass_north,  sensorDigitalIn)
 #pragma config(Sensor, dgtl5,  line_FL,        sensorDigitalIn)
 #pragma config(Sensor, dgtl6,  line_FR,        sensorDigitalIn)
 #pragma config(Sensor, dgtl7,  line_BL,        sensorDigitalIn)
@@ -10,7 +14,7 @@
 #pragma config(Sensor, dgtl9,  ball_switch,    sensorTouch)
 #pragma config(Sensor, dgtl10, bumper_L,       sensorTouch)
 #pragma config(Sensor, dgtl11, bumper_R,       sensorTouch)
-#pragma config(Sensor, dgtl12, on_switch,      sensorTouch)
+#pragma config(Sensor, dgtl12, compass_supply, sensorDigitalOut)
 #pragma config(Motor,  port2,           left_motor,    tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port4,           ball_out_motor, tmotorServoContinuousRotation, openLoop)
 #pragma config(Motor,  port5,           ball_in_motor, tmotorServoContinuousRotation, openLoop)
@@ -67,16 +71,12 @@ byte right;
 byte front;
 byte back;
 
-bool bumper_hit;
-
 void wait_for_on();
 void stop_tasks();
 
 task begin();
 task full_stop();
-task compass_detection();
-task dist_detection();
-task line_detection();
+task detection();
 task action();
 
 //-----------end of global functions/tasks-----------
@@ -84,7 +84,6 @@ task action();
 task action() {
 	while (true) {
 		//add in all possible combinations of sensor values and robot state values to determine corresponding robot action
-		bumper_hit = false;
 		if (distance_long1 < 45) {
 			drive(1, 30);
 			//motor [ball_in_motor] = 0;
@@ -94,9 +93,8 @@ task action() {
 		} else if (SensorValue [ball_switch] == 1) { //collected ball
 			stop_movement();
 			//add code to change state to return to base
-		} else if (SensorValue [bumper_L] == 1 && SensorValue [bumper_R] == 1 && distance_long2 >= 15 && bumper_hit == false) {
+		} else if (SensorValue [bumper_L] == 1 && SensorValue [bumper_R] == 1 && distance_long2 >= 15 && SensorValue [ball_switch] == 1) {
 			stop_movement();
-			bumper_hit = true;
 			deposit_ball();
 			move_field();
 		}	else {
@@ -105,16 +103,11 @@ task action() {
 	}
 }
 
-task compass_detection() {
-	while (true) {get_direction();}
-}
+task detection() {
+	while (true) {
+		get_direction();
+		distance_calculator();
 
-task dist_detection() {
-	while (true) {distance_calculator();}
-}
-
-task line_detection(){
-	while(true){
 		left = !SensorValue[line_FL] << 0;
 	 	right = !SensorValue[line_FR] << 1;
 		front = !SensorValue[line_BL] << 2;
@@ -128,9 +121,7 @@ task begin() {
 	if (cycles == 1) {clearTimer(T1);}
 
 	move_field();
-	startTask(compass_detection);
-	startTask(dist_detection);
-	startTask(line_detection);
+	startTask(detection);
 	startTask(action);
 
 	clearTimer(T2);
@@ -150,9 +141,7 @@ void wait_for_on() {
 }
 
 void stop_tasks() { //stop all tasks and movements except for emergency_stop and main
-	stopTask(compass_detection);
-	stopTask(dist_detection);
-	stopTask(line_detection);
+	stopTask(detection);
 	stopTask(action);
 	stop_movement();
 }
