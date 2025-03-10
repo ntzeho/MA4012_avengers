@@ -149,3 +149,45 @@ task main() {
 	wait_for_on();
 	while (true) {/* Loop ensures that main task is not terminated */}
 }
+
+
+// temp
+void robot_state_machine() {
+    if (distance_long0 < 15) {
+        detected_state = ROBOT_FRONT_DETECTED;
+    }
+    else if (distance_long1 < 15) {
+        detected_state = ROBOT_REAR_DETECTED;
+    }
+    else if (((distance_long0 > 15)) && (distance_long2 < 40)) {
+        detected_state = BALL_DETECTED;
+        }
+    else {
+        detected_state = BLANK;
+    }
+
+    if (detected_state == previous_detected_state) {
+        state_counter++;
+    }
+    else {
+        state_counter = 1;
+    }
+
+    previous_detected_state = detected_state;
+
+    if (state_counter >= 5 && robot_state != detected_state) {
+        robot_state = detected_state;
+
+        switch(robot_state) {
+            case BALL_DETECTED:
+                break;
+            case ROBOT_FRONT_DETECTED:
+                break;
+            case ROBOT_REAR_DETECTED:
+                break;
+            case BLANK:
+                break;
+        }
+        state_counter = 1;
+    }
+}
