@@ -146,11 +146,12 @@ void wait_for_on() {
 	clearTimer(T1);
 	while (SensorValue [on_switch] == 1) {/* Nothing executed when limit switch isn't released */}
 	if (time1[T1] < 2000) {start_position = 'L';} // robot start on left position when on switch just touch and go
-	else if (time1[T1] <= 4000) {start_position = 'R';}            // robot start on right position when on switch held for 2 to 4s
-	else {start_position = 'C';}                  // robot restarted
+	else {start_position = 'R';} // robot start on right position when on switch held for at least 2s
 
-	if (cycles == 1) {clearTimer(T1);}
-	move_field();
+	if (cycles == 1) {
+		clearTimer(T1);
+		move_field(); //move field only if robot did not start again
+	}
 	startTask(detection);
 	startTask(action);
 	clearTimer(T2);
