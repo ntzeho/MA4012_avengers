@@ -18,7 +18,7 @@ enum lineSensors {
 };
 
 // Function to react based on the sensor states
-void react_to_sensors(int sensorState) {
+void react_to_sensors(short sensorState) {
     right_action =0;
     left_action=0;
     forward_action=0;
