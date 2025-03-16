@@ -55,6 +55,7 @@ char start_position;
 #include "distance_sensors.c"
 #include "line_sensors.c"
 #include "robot_state.c"
+#include "scanning.c"
 
 void wait_for_on();
 task full_stop();
@@ -121,7 +122,7 @@ task action() {
 				break;
 
 			case BALL_SEARCH_NO_ROBOT:
-				//add code for normal scanning algo
+				ball_scanning();
 				break;
 
 			case LINE_SENSOR_DETECTED:
@@ -169,10 +170,8 @@ void wait_for_on() {
 	}
 	startTask(detection);
 	startTask(action);
-	clearTimer(T2);
-	cycles++;
-
 	startTask(full_stop);
+	cycles++;
 }
 
 task main() {
