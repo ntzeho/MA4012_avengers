@@ -15,6 +15,61 @@ void stop_movement() {
     motor [right_motor] = 0;
 }
 
+void turn_angle(short direction, short angle) {
+    //assuming 1 is forward and -1 is backward:
+    //direction = 1 means turn right, direction = -1 means turn left
+    turn(direction, 30);
+    const short milliseconds_per_degree = 1;
+    sleep(milliseconds_per_degree * angle);
+    stop_movement();
+}
+
+void turn_to_north() {
+    switch (robot_orientation) {
+        case NORTH:
+            break;
+        
+        //turn left
+        case NORTHEAST:
+            turn(-1, 30);
+            while (robot_orientation != NORTH) {}
+            stop_movement();
+            break;
+        case EAST:
+            turn(-1, 30);
+            while (robot_orientation != NORTH) {}
+            stop_movement();
+            break;
+        case SOUTHEAST:
+            turn(-1, 30);
+            while (robot_orientation != NORTH) {}
+            stop_movement();
+            break;
+        case SOUTH:
+            turn(-1, 30);
+            while (robot_orientation != NORTH) {}
+            stop_movement();
+            break;
+
+        //turn right
+        case SOUTHWEST:
+            turn(1, 30);
+            while (robot_orientation != NORTH) {}
+            stop_movement();
+            break;
+        case WEST:
+            turn(1, 30);
+            while (robot_orientation != NORTH) {}
+            stop_movement();
+            break;
+        case NORTHWEST:
+            turn(1, 30);
+            while (robot_orientation != NORTH) {}
+            stop_movement();
+            break;
+    }
+}
+
 void move_field() { //move to just over halfway point to begin searching for balls
     if (time10[T1] < 12000 && ball_count == 0) { //movement when total elapsed time under 2mins
         drive(1, 127);
@@ -41,12 +96,12 @@ void move_field() { //move to just over halfway point to begin searching for bal
 
 void collect_ball() {
     motor [ball_in_motor] = 127;
-    drive(1,15);
+    drive(1,30);
 }
 
 void deposit_ball() {
     motor [ball_out_motor] = -127;
     sleep(2000);
     motor [ball_out_motor] = 0;
-    sleep(10);
+    sleep(1);
 }
