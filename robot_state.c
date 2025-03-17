@@ -10,6 +10,7 @@ enum robotState {
     ROBOT_REAR_DETECTED_BALL_OUT,   // continue
     // long dist sensor for ball
     BALL_DETECTED,                  // ball detected, no robot ard; go to ball
+    BALL_DETECTED_COLLECT_BALL,     // ball detected, no robot arnd; collect ball
     BALL_SEARCH_NO_ROBOT,           // default ball search
     // limit switch for ball collection
     BALL_COLLECTED_NO_ROBOT,        // move to home
@@ -31,6 +32,8 @@ void robot_state_machine() {
         detected_state = HOME;
     } else if (to_avoid_boundary) {
         detected_state = LINE_SENSOR_DETECTED;
+    } else if (distance_ball_front < 20 && SensorValue [ball_switch] == 0 && distance_robot_front > distance_ball_front + 5) {
+        detected_state = BALL_DETECTED_COLLECT_BALL;
     } else if (distance_ball_front < 70 && SensorValue [ball_switch] == 0 && distance_robot_front > distance_ball_front + 5) {
         detected_state = BALL_DETECTED;
     } else if (SensorValue [ball_switch] == 1 && distance_robot_front < 15 && distance_robot_rear >= 15) {

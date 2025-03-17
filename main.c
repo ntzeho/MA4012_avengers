@@ -85,11 +85,12 @@ task action() {
 				}
 				break;
 
-			case BALL_DETECTED: //drive towards ball, start spinning ball_in_motor when close enough to ball
+			case BALL_DETECTED: //drive towards ball
 				drive(1, 60);
-				if (distance_ball_front < 20 && SensorValue [ball_switch] == 0 && distance_robot_front > distance_ball_front + 5) {
-					collect_ball();
-				}
+				break;
+
+			case BALL_DETECTED_COLLECT_BALL: //drive slower towards ball, start spinning ball_in_motor as close enough to ball
+				collect_ball();
 				break;
 
 			case HOME: //both bumper switches pressed, ball in robot and not back robot means deposit ball
