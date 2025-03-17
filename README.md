@@ -5,4 +5,5 @@
 - distance_sensors.c - convert distance sensor readings to distance in cm
 - line_sensors.c - determine robot action depending on permutations of triggered line sensors
 - robot_state.c - robot state machine to determine robot state
+- scanning.c - ball scanning algorithm
 - main.c - source code importing above files in order
