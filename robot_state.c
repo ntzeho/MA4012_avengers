@@ -42,8 +42,6 @@ void robot_state_machine() {
         detected_state = ROBOT_FRONT_DETECTED_BALL_OUT;
     } else if (SensorValue [ball_switch] == 1 && distance_robot_front >= 15 && distance_robot_rear < 15) {
         detected_state = ROBOT_REAR_DETECTED_BALL_IN;
-    } else if (SensorValue [ball_switch] == 0 && distance_robot_front >= 15 && distance_robot_rear < 15) {
-        detected_state = ROBOT_REAR_DETECTED_BALL_OUT;
     } else if (SensorValue [ball_switch] == 1 && distance_robot_front >= 15 && distance_robot_rear >= 15) {
         detected_state = BALL_COLLECTED_NO_ROBOT;
     } else {

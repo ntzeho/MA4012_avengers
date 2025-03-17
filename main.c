@@ -22,8 +22,6 @@
 short cycles = 0; // detect number of times on-off switch was pressed while robot is on
 short ball_count = 0; //number of balls collected by robot
 char start_position = 'L'; //starting position of robot, default at left side
-bool new_robot_behind = false; //true when robot enters ROBOT_REAR_DETECTED_BALL_OUT state as new state
-float distance_robot_rear_temp;
 
 //debugging variables
 bool is_turning = false;
@@ -107,9 +105,6 @@ task action() {
 				drive(-1, 60);
 				sleep(500);
 				stop_movement();
-				break;
-
-			case ROBOT_REAR_DETECTED_BALL_OUT: //robot finding ball but robot behind, ignore?
 				break;
 
 			case BALL_SEARCH_NO_ROBOT:
