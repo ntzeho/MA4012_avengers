@@ -71,24 +71,35 @@ void turn_to_north() {
 }
 
 void move_field() { //move to just over halfway point to begin searching for balls
-    if (time10[T1] < 12000 && ball_count == 0) { //movement when total elapsed time under 2mins
-        drive(1, 127);
-        sleep(3000);
-    } else if (ball_count == 1) {
-        //movement to centre sector with appropriate turning depending on start_position value
-        drive(1, 127);
-        sleep(3000);
-        switch (start_position) {
-            case 'L':
-                //do xxx
-                break;
-            case 'R':
-                //do yyy
-                break;
-        }
-    } else { //movement when only 1 min left on clock
-        drive(1, 30);
-        sleep(1000);
+    switch (ball_count) {
+        case 0:
+            drive(1, 127);
+            sleep(3000);
+            break;
+        
+        case 1:
+            //movement to centre sector with appropriate turning depending on start_position value
+            drive(1, 127);
+            sleep(3000);
+            switch (start_position) {
+                case 'L':
+                    //do xxx
+                    break;
+                case 'R':
+                    //do yyy
+                    break;
+            }
+            break;
+        
+        default:
+            if (time10[T1] < 12000) { //movement when total elapsed time under 2mins
+                drive(1, 127);
+                sleep(3000);
+            } else { //movement when 1min or less left on clock
+                drive(1, 30);
+                sleep(1000);
+            }
+            break;
     }
     
     stop_movement();
