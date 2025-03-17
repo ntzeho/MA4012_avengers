@@ -1,6 +1,6 @@
-#pragma config(Sensor, in1,    dist_long0,     sensorAnalog)
 #pragma config(Sensor, in2,    dist_long1,     sensorAnalog)
 #pragma config(Sensor, in3,    dist_long2,     sensorAnalog)
+#pragma config(Sensor, in8,    dist_long0,     sensorAnalog)
 #pragma config(Sensor, dgtl1,  compass_west,   sensorDigitalIn)
 #pragma config(Sensor, dgtl2,  compass_south,  sensorDigitalIn)
 #pragma config(Sensor, dgtl3,  compass_east,   sensorDigitalIn)
@@ -50,6 +50,10 @@ short cycles = 0; // detect number of times on-off switch was pressed while robo
 short ball_count = 0; //number of balls collected by robot
 char start_position;
 
+//debugging variables
+bool is_turning = false;
+bool is_moving_after_first_ball = false;
+
 #include "compass.c"
 #include "movement.c"
 #include "distance_sensors.c"
@@ -83,7 +87,7 @@ task action() {
 
 			case BALL_DETECTED: //drive towards ball, start spinning ball_in_motor when close enough to ball
 				drive(1, 60);
-				if (distance_long1 < 20 && SensorValue [ball_switch] == 0 && distance_long0 > 20) {
+				if (distance_ball_front < 20 && SensorValue [ball_switch] == 0 && distance_robot_front > distance_ball_front + 5) {
 					collect_ball();
 				}
 				break;
@@ -92,13 +96,17 @@ task action() {
 				stop_movement();
 				deposit_ball();
 				ball_count++;
+				is_moving_after_first_ball = true;
 				move_field();
+				is_moving_after_first_ball = false;
 				break;
 
 			case BALL_COLLECTED_NO_ROBOT: //robot collected ball and no nearby robots
 				motor [ball_in_motor] = 0;
 				stop_movement();
+				is_turning = true;
 				turn_to_north();
+				is_turning = false;
 				drive(-1, 127);
 				break;
 
@@ -153,25 +161,24 @@ task full_stop() { // stop all tasks and movements except for emergency_stop and
 	stop_movement();
 	motor [ball_in_motor] = 0;
 	motor [ball_out_motor] = 0;
-
+	sleep(2000);
 	wait_for_on();
 }
 
 void wait_for_on() {
 	while (SensorValue [on_switch] == 0) {/* Nothing is executed when limit switch isn't pressed */}
 	clearTimer(T1);
-	while (SensorValue [on_switch] == 1) {/* Nothing executed when limit switch isn't released */}
-	if (time1[T1] < 2000) {start_position = 'L';} // robot start on left position when on switch just touch and go
-	else {start_position = 'R';} // robot start on right position when on switch held for at least 2s
-
+	while (SensorValue [on_switch] == 1) {sleep(100);}
+	cycles++;
 	if (cycles == 1) {
+		if (time1[T1] < 2000) {start_position = 'L';} // robot start on left position when on switch just touch and go
+		else {start_position = 'R';} // robot start on right position when on switch held for at least 2s
 		clearTimer(T1);
 		move_field(); //move field only if robot did not start again
 	}
 	startTask(detection);
 	startTask(action);
 	startTask(full_stop);
-	cycles++;
 }
 
 task main() {

@@ -95,7 +95,7 @@ void move_field() { //move to just over halfway point to begin searching for bal
 }
 
 void collect_ball() {
-    motor [ball_in_motor] = 127;
+    motor [ball_in_motor] = -127;
     drive(1,30);
 }
 

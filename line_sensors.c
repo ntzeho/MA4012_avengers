@@ -52,6 +52,7 @@ void react_to_line_sensors() {
 
         case 1: // FL
             drive(-1, 30);
+            sleep(500);
             turn_angle(1, 45); // Turn right 45 degrees
             drive(1, 30); // Drive forward slightly
             sleep(500);
@@ -59,6 +60,7 @@ void react_to_line_sensors() {
 
         case 2: // FR  
             drive(-1, 30);
+            sleep(500);
             turn_angle(-1, 45); // Turn left 45 degrees
             drive(1, 30); // Drive forward slightly
             sleep(500);
@@ -72,6 +74,7 @@ void react_to_line_sensors() {
 
         case 4: // BL
             drive(1, 30);
+            sleep(500);
             turn_angle(1, 20); // Turn right 20 degrees
             drive(1, 30); // Drive forward slightly
             sleep(500);
@@ -95,6 +98,7 @@ void react_to_line_sensors() {
 
         case 8: // BR
             drive(1, 30);
+            sleep(500);
             turn_angle(-1, 20); // Turn left 20 degrees
             drive(1, 30); // Drive forward slightly
             sleep(500);
