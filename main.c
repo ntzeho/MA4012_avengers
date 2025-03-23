@@ -145,7 +145,7 @@ task full_stop() { // stop all tasks and movements except for emergency_stop and
 
 void wait_for_on() {
 	while (SensorValue [on_switch] == 0) {/* Nothing is executed when limit switch isn't pressed */}
-	clearTimer(T1);
+	if (cycles == 0) {clearTimer(T1);}
 	while (SensorValue [on_switch] == 1) {sleep(100);}
 	cycles++;
 	if (cycles == 1) {
