@@ -4,8 +4,14 @@ const short DEFAULT_MOTOR_TURNING_SPEED = 60;
 const short DEFAULT_BALL_MOTOR_SPEED = 127;
 const short MS_PER_DEGREE = 8;
 
-const short START_MOVE_FIELD_TIME = 2000;
-const short END_MOVE_FIELD_TIME = 1000;
+const short START_MOVE_FIELD_DISTANCE = 150;
+const short END_MOVE_FIELD_DISTANCE = 120;
+
+const short START_MOVE_FIELD_TIME = 2500;
+const short END_MOVE_FIELD_TIME = 2000;
+const short TIME_TO_TRAVEL_30_CM = 500;
+const short TIME_TO_TRAVEL_60_CM = 1000;
+
 const short BALL_OUT_MOTOR_SLEEP_TIME = 2000;
 
 const short ROBOT_REAR_DISTANCE_THRESHOLD = 10;

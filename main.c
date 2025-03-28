@@ -34,7 +34,6 @@ bool is_moving_after_first_ball = false;
 #include "robot_state.c"
 #include "movement.c"
 #include "sensor_action.c"
-#include "scanning.c"
 
 void wait_for_on();
 
@@ -103,10 +102,10 @@ task action() {
 				sleep(500);
 				switch (start_position) {
 					case 'L':
-						turn_angle(1, 90);
+						turn_90_degrees_R();
 						break;
 					case 'R':
-						turn_angle(-1, 90);
+						turn_90_degrees_L();
 						break;
 				}
 				drive(-1, DEFAULT_MOTOR_DRIVING_SPEED);
@@ -163,7 +162,6 @@ void wait_for_on() {
 	cycles++;
 	if (cycles == 1) {
 		if (time1[T1] >= 2000) {start_position = 'R';} // robot start on right position when on switch held for at least 2s
-		clearTimer(T1);
 		move_field(); //move field only if robot did not start again
 	}
 	startTask(detection);
