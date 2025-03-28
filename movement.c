@@ -1,9 +1,6 @@
 void sleep_with_state_detection(short sleep_time) {
-    short i = 0;
-    while (executed_robot_state == robot_state && i < sleep_time) {
-  	    sleep(1);
-        i++;
-	}
+    clearTimer(T1);
+    while (executed_robot_state == robot_state && time1[T1] < sleep_time) {}
 }
 
 void drive(short direction, short speed) {
