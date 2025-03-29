@@ -47,6 +47,14 @@ void drive_distance_fixed(short direction, short distance) {
     //distance in cm
     drive(direction, DEFAULT_MOTOR_DRIVING_SPEED);
     switch (distance) {
+        case 10:
+            sleep(TIME_TO_TRAVEL_10_CM);
+            break;
+
+        case 15:
+            sleep(TIME_TO_TRAVEL_15_CM);
+            break;
+            
         case 30:
             sleep(TIME_TO_TRAVEL_30_CM);
             break;
@@ -77,7 +85,7 @@ void turn_to_north() {
         case SOUTHEAST:
         case SOUTH:
             turn(-1, DEFAULT_MOTOR_TURNING_SPEED);
-            while (robot_orientation != NORTH && executed_robot_state == robot_state) {}
+            while (robot_orientation != NORTH && executed_robot_state == robot_state && !line_sensor_state_check()) {}
             stop_movement();
             break;
 
@@ -86,7 +94,7 @@ void turn_to_north() {
         case WEST:
         case NORTHWEST:
             turn(1, DEFAULT_MOTOR_TURNING_SPEED);
-            while (robot_orientation != NORTH && executed_robot_state == robot_state) {}
+            while (robot_orientation != NORTH && executed_robot_state == robot_state && !line_sensor_state_check()) {}
             stop_movement();
             break;
     }
@@ -103,7 +111,7 @@ void turn_to_east() {
         case SOUTHWEST:
         case WEST:
             turn(-1, DEFAULT_MOTOR_TURNING_SPEED);
-            while (robot_orientation != EAST && executed_robot_state == robot_state) {}
+            while (robot_orientation != EAST && executed_robot_state == robot_state && !line_sensor_state_check()) {}
             stop_movement();
             break;
 
@@ -112,7 +120,7 @@ void turn_to_east() {
         case NORTH:
         case NORTHEAST:
             turn(1, DEFAULT_MOTOR_TURNING_SPEED);
-            while (robot_orientation != EAST && executed_robot_state == robot_state) {}
+            while (robot_orientation != EAST && executed_robot_state == robot_state && !line_sensor_state_check()) {}
             stop_movement();
             break;
     }
@@ -129,7 +137,7 @@ void turn_to_south() {
         case NORTHWEST:
         case NORTH:
             turn(-1, DEFAULT_MOTOR_TURNING_SPEED);
-            while (robot_orientation != SOUTH && executed_robot_state == robot_state) {}
+            while (robot_orientation != SOUTH && executed_robot_state == robot_state && !line_sensor_state_check()) {}
             stop_movement();
             break;
 
@@ -138,7 +146,7 @@ void turn_to_south() {
         case EAST:
         case SOUTHEAST:
             turn(1, DEFAULT_MOTOR_TURNING_SPEED);
-            while (robot_orientation != SOUTH && executed_robot_state == robot_state) {}
+            while (robot_orientation != SOUTH && executed_robot_state == robot_state && !line_sensor_state_check()) {}
             stop_movement();
             break;
     }
@@ -155,7 +163,7 @@ void turn_to_west() {
         case NORTHEAST:
         case EAST:
             turn(-1, DEFAULT_MOTOR_TURNING_SPEED);
-            while (robot_orientation != WEST && executed_robot_state == robot_state) {}
+            while (robot_orientation != WEST && executed_robot_state == robot_state && !line_sensor_state_check()) {}
             stop_movement();
             break;
 
@@ -164,7 +172,7 @@ void turn_to_west() {
         case SOUTH:
         case SOUTHWEST:
             turn(1, DEFAULT_MOTOR_TURNING_SPEED);
-            while (robot_orientation != WEST && executed_robot_state == robot_state) {}
+            while (robot_orientation != WEST && executed_robot_state == robot_state && !line_sensor_state_check()) {}
             stop_movement();
             break;
     }
@@ -278,11 +286,8 @@ void move_field() { //move to just over halfway point to begin searching for bal
         case 1:
             //movement to centre sector with appropriate turning depending on start_position value
             drive_distance_fixed(1, START_MOVE_FIELD_DISTANCE);
-            if (start_position == 'L') {
-                turn_90_degrees_R();
-            } else {
-                turn_90_degrees_L();
-            }
+            if (start_position == 'L') {turn_90_degrees_R();}
+            else {turn_90_degrees_L();}
             break;
         
         default:
@@ -305,7 +310,7 @@ void deposit_ball() {
 }
 
 void ball_scanning() {
-    turn_360_degrees();
-    if (executed_robot_state == robot_state) {drive_distance(1, 60);}
+    drive_distance(1, 60);
+    if(executed_robot_state == robot_state) {turn_360_degrees();}
     stop_movement();
 }

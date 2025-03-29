@@ -1,143 +1,103 @@
 void react_to_line_sensors() {
     switch (line_sensor_state) {
-        case 0: // NONE
-            // No action
-            break;
-
         case 1: // FL
-            stop_movement();
-            drive(-1, 30);
-            sleep(500);
-            turn_angle(1, 45); // Turn right 45 degrees
-            drive(1, 30); // Drive forward slightly
-            sleep(500);
+        //reverse and turn right to align with nearest orientation
             break;
 
         case 2: // FR  
-            stop_movement();
-            drive(-1, 30);
-            sleep(500);
-            turn_angle(-1, 45); // Turn left 45 degrees
-            drive(1, 30); // Drive forward slightly
-            sleep(500);
+        //reverse and turn left to align with nearest orientation
             break;
 
-        case 3: // FL | FR    
+        case 3: // FL | FR
             stop_movement();         
-            drive(-1, 30); // Drive backward slightly
-            sleep(500);
-            turn_angle(1, 180); // Rotate 180 degrees
+            drive_distance_fixed(-1, 30);
+            if (start_position == 'L') {turn_90_degrees_R();}
+            else {turn_90_degrees_L();}
             break;
 
         case 4: // BL
+        //drive forward and turn right to align with nearest orientation
+            break;
+
+        case 5: // FL | BL
             stop_movement();
-            drive(1, 30);
-            sleep(500);
-            turn_angle(1, 20); // Turn right 20 degrees
-            drive(1, 30); // Drive forward slightly
-            sleep(500);
-            break;
-
-        case 5: // FL | BL   
-            stop_movement();          
-            turn_angle(1, 45); // Turn right 45 degrees
-            drive(1, 30); // Drive forward slightly
-            sleep(500);
-            break;
-
-        case 6: // FR | BL           
-            // Ignore
+            turn_angle(1, 45);
+            drive_distance(1, 30);
             break;
 
         case 7: // FL | FR | BL
             stop_movement();
-            turn_angle(1, 100); // Turn right 100 degrees
-            drive(1, 30); // Drive forward slightly
-            sleep(500);
+            drive_distance_fixed(-1, 30); //will move to case 5
             break;
 
         case 8: // BR
-            stop_movement();
-            drive(1, 30);
-            sleep(500);
-            turn_angle(-1, 20); // Turn left 20 degrees
-            drive(1, 30); // Drive forward slightly
-            sleep(500);
-            break;
-
-        case 9: // FL | BR          
-            // Ignore
+        //drive forward and turn left to align with nearest orientation
             break;
             
         case 10: // FR | BR
             stop_movement();
-            turn_angle(-1, 45); // Turn left 45 degrees
-            drive(1, 30); // Drive forward slightly
-            sleep(500);
+            turn_angle(-1, 45);
+            drive_distance_fixed(1, 30);
             break;
 
         case 11: // FL | FR | BR
             stop_movement();
-            turn_angle(-1, 100); // Turn left 100 degrees
-            drive(1, 30); // Drive forward slightly
-            sleep(500);
+            drive_distance_fixed(-1, 30); //will move to case 10
             break;
 
         case 12: // BL | BR
-            /*
-            sensorCase12 = 1;
-            if () { // Check ball present and 2 rear limit switch depressed
-                deposit_ball(); 
-            } else {
-                drive(); // Drive forward slightly
-            }
-            */
-            //mechanical detection better than sensor detection, HOME >> boundary
             stop_movement();
-            drive(1, 30); // Drive forward slightly
-            sleep(500);
+            drive_distance_fixed(1, 30);
             break;
         
         case 13: // FL | BL | BR
-            /*
-            sensorCase13 = 1;
-            if () { // Check ball present and 2 rear limit switch depressed
-                deposit_ball(); 
-            } else {
-                turn(); // Turn right 45 degrees
-                drive(); // Drive forward slightly
-            }
-            */
-            //same as case 12
             stop_movement();
-            turn_angle(1, 45); // Turn right 45 degrees
-            drive(1, 30); // Drive forward slightly
-            sleep(500);
+            drive_distance_fixed(1, 30); //will move to case 5
             break;
 
         case 14: // FR | BL | BR
-            /*
-            sensorCase14 = 1;
-            if () { // Check ball present and 2 rear limit switch depressed
-                deposit_ball();
-            } else {
-                turn(); // Turn left 45 degrees
-                drive(); // Drive forward slightly
-            }
-            */
-            //same as case 12
             stop_movement();
-            turn_angle(-1, 45); // Turn left 45 degrees
-            drive(1, 30); // Drive forward slightly
-            sleep(500);
+            drive_distance_fixed(1, 30); //will move to case 10
             break;
-        
-        case 15: // ALL
-            //stop_movement();
-            //impossibe to occur, if happens means likely bug
-            break; 
 
-        default: // For any unknown states
+        default:
+            /*
+            case 0: // NONE
+            case 6: // FR | BL
+            case 9: // FL | BR
+            case 15: // ALL, enemy robot has their own yellow lines
+            */
+            break;
+    }
+
+    sleep(1);
+}
+
+void react_to_line_sensors_collect_ball() {
+    switch (line_sensor_state) {
+        case 1: // FL
+        case 2: // FR
+        case 3: // FL | FR
+        case 7: // FL | FR | BL
+        case 11: // FL | FR | BR
+            drive_distance_fixed(1, 10);
+            drive_distance_fixed(-1, 15);
+            break;
+
+        default:
+            /*
+            case 0: // NONE
+            case 4: // BL
+            case 6: // FR | BL
+            case 5: // FL | BL
+            case 8: // BR
+            case 9: // FL | BR
+            case 10: // FR | BR
+            case 12: // BL | BR
+            case 13: // FL | BL | BR
+            case 14: // FR | BL | BR
+            case 15: // ALL, enemy robot has their own yellow lines
+            */
             break;
     }
 

@@ -44,17 +44,20 @@ task action() {
 			case BALL_SEARCH_FIRST_BALL:
 				executed_robot_state = BALL_SEARCH_FIRST_BALL;
 				turn(-1, DEFAULT_MOTOR_TURNING_SPEED);
+				previous_executed_robot_state = BALL_SEARCH_FIRST_BALL;
 				break;
 
 			case BALL_DETECTED: //drive towards ball
 				executed_robot_state = BALL_DETECTED;
 				motor [ball_in_motor] = 0;
 				drive(1, DEFAULT_MOTOR_DRIVING_SPEED);
+				previous_executed_robot_state = BALL_DETECTED;
 				break;
 
 			case BALL_DETECTED_COLLECT_BALL: //drive slower towards ball, start spinning ball_in_motor as close enough to ball
 				executed_robot_state = BALL_DETECTED_COLLECT_BALL;
 				collect_ball();
+				previous_executed_robot_state = BALL_DETECTED_COLLECT_BALL;
 				break;
 
 			case HOME: //both bumper switches pressed, ball in robot and not back robot, orientation NORTH means deposit ball
@@ -67,6 +70,7 @@ task action() {
 				is_moving_after_first_ball = true;
 				move_field();
 				is_moving_after_first_ball = false;
+				previous_executed_robot_state = HOME;
 				break;
 
 			case BALL_COLLECTED_NO_ROBOT: //robot collected ball and no nearby robots
@@ -78,6 +82,7 @@ task action() {
 				turn_to_north();
 				is_turning = false;
 				if (executed_robot_state == robot_state) {drive(-1, DEFAULT_MOTOR_DRIVING_SPEED);}
+				previous_executed_robot_state = BALL_COLLECTED_NO_ROBOT;
 				break;
 
 			case ROBOT_FRONT_DETECTED_BALL_IN: //robot collected ball but robot in front, reverse away first
@@ -85,6 +90,7 @@ task action() {
 				ball_collected = true;
 				motor [ball_in_motor] = 0;
 				drive(-1, DEFAULT_MOTOR_DRIVING_SPEED);
+				previous_executed_robot_state = ROBOT_FRONT_DETECTED_BALL_IN;
 				break;
 
 			case ROBOT_FRONT_DETECTED_BALL_OUT: //robot finding ball but robot in front, reverse slightly and turn 20 degrees
@@ -94,6 +100,7 @@ task action() {
 				drive(-1, SLOW_MOTOR_DRIVING_SPEED);
 				sleep(500);
 				turn_angle(1, 20);
+				previous_executed_robot_state = ROBOT_FRONT_DETECTED_BALL_OUT;
 				break;
 
 			case ROBOT_REAR_DETECTED_BALL_IN: //robot collected ball but robot behind, move foward first, turn 90 degrees, move back a bit
@@ -114,17 +121,26 @@ task action() {
 				drive(-1, DEFAULT_MOTOR_DRIVING_SPEED);
 				sleep(500);
 				stop_movement();
+				previous_executed_robot_state = ROBOT_REAR_DETECTED_BALL_IN;
 				break;
 
 			case BALL_SEARCH_NO_ROBOT:
 				executed_robot_state = BALL_SEARCH_NO_ROBOT;
 				motor [ball_in_motor] = 0;
 				ball_scanning();
+				previous_executed_robot_state = BALL_SEARCH_NO_ROBOT;
+				break;
+
+			case LINE_SENSOR_DETECTED_BALL_DETECTED_COLLECT_BALL:
+				executed_robot_state = LINE_SENSOR_DETECTED_BALL_DETECTED_COLLECT_BALL;
+				react_to_line_sensors_collect_ball();
+				previous_executed_robot_state = LINE_SENSOR_DETECTED_BALL_DETECTED_COLLECT_BALL;
 				break;
 
 			case LINE_SENSOR_DETECTED:
 				executed_robot_state = LINE_SENSOR_DETECTED;
 				react_to_line_sensors();
+				previous_executed_robot_state = LINE_SENSOR_DETECTED;
 				break;
 
 			default:

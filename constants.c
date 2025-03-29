@@ -9,6 +9,8 @@ const short END_MOVE_FIELD_DISTANCE = 120;
 
 const short START_MOVE_FIELD_TIME = 2500;
 const short END_MOVE_FIELD_TIME = 2000;
+const short TIME_TO_TRAVEL_10_CM = 100;
+const short TIME_TO_TRAVEL_15_CM = 250;
 const short TIME_TO_TRAVEL_30_CM = 500;
 const short TIME_TO_TRAVEL_60_CM = 1000;
 

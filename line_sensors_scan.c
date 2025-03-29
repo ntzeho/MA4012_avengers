@@ -1,5 +1,4 @@
 short line_sensor_state;
-bool to_avoid_boundary = false;
 byte FL;
 byte FR;
 byte BL;
@@ -25,24 +24,12 @@ void get_line_sensor_state() {
     BR = !SensorValue[line_BR] << 3;
     line_sensor_state = FL | FR | BL | BR;
 
-    switch(line_sensor_state){
-        case 0:
-            to_avoid_boundary = false;
-            break;
-        case 6:
-            to_avoid_boundary = false;
-            break;
-        case 9:
-            to_avoid_boundary = false;
-            break;
-        case 15:
-            to_avoid_boundary = false;
-            break;
-        default:
-            to_avoid_boundary = true;
-            break;
-    }
 }
+/*
+react_to_line_sensors_scanning() - response to line detection when robot is scanning for ball
+react_to_line_sensors_collecting() - response to line detection when robot is in midst of collecting ball
+react_to_line_sensors_collected() - response to line detection when robot is returning to base
+*/
 
 /*
 first ball - move forward until close to ball grid, then start turning left to scan
@@ -75,6 +62,7 @@ void react_to_line_sensors() {
             break;
 
         case 1: // FL
+            stop_movement();
             drive(-1, 30);
             sleep(500);
             turn_angle(1, 45); // Turn right 45 degrees
@@ -83,6 +71,7 @@ void react_to_line_sensors() {
             break;
 
         case 2: // FR  
+            stop_movement();
             drive(-1, 30);
             sleep(500);
             turn_angle(-1, 45); // Turn left 45 degrees
@@ -90,13 +79,15 @@ void react_to_line_sensors() {
             sleep(500);
             break;
 
-        case 3: // FL | FR             
+        case 3: // FL | FR    
+            stop_movement();         
             drive(-1, 30); // Drive backward slightly
             sleep(500);
             turn_angle(1, 180); // Rotate 180 degrees
             break;
 
         case 4: // BL
+            stop_movement();
             drive(1, 30);
             sleep(500);
             turn_angle(1, 20); // Turn right 20 degrees
@@ -104,7 +95,8 @@ void react_to_line_sensors() {
             sleep(500);
             break;
 
-        case 5: // FL | BL             
+        case 5: // FL | BL   
+            stop_movement();          
             turn_angle(1, 45); // Turn right 45 degrees
             drive(1, 30); // Drive forward slightly
             sleep(500);
@@ -115,12 +107,14 @@ void react_to_line_sensors() {
             break;
 
         case 7: // FL | FR | BL
+            stop_movement();
             turn_angle(1, 100); // Turn right 100 degrees
             drive(1, 30); // Drive forward slightly
             sleep(500);
             break;
 
         case 8: // BR
+            stop_movement();
             drive(1, 30);
             sleep(500);
             turn_angle(-1, 20); // Turn left 20 degrees
@@ -133,12 +127,14 @@ void react_to_line_sensors() {
             break;
             
         case 10: // FR | BR
+            stop_movement();
             turn_angle(-1, 45); // Turn left 45 degrees
             drive(1, 30); // Drive forward slightly
             sleep(500);
             break;
 
         case 11: // FL | FR | BR
+            stop_movement();
             turn_angle(-1, 100); // Turn left 100 degrees
             drive(1, 30); // Drive forward slightly
             sleep(500);
@@ -154,6 +150,7 @@ void react_to_line_sensors() {
             }
             */
             //mechanical detection better than sensor detection, HOME >> boundary
+            stop_movement();
             drive(1, 30); // Drive forward slightly
             sleep(500);
             break;
@@ -169,6 +166,7 @@ void react_to_line_sensors() {
             }
             */
             //same as case 12
+            stop_movement();
             turn_angle(1, 45); // Turn right 45 degrees
             drive(1, 30); // Drive forward slightly
             sleep(500);
@@ -185,6 +183,7 @@ void react_to_line_sensors() {
             }
             */
             //same as case 12
+            stop_movement();
             turn_angle(-1, 45); // Turn left 45 degrees
             drive(1, 30); // Drive forward slightly
             sleep(500);

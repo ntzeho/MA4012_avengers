@@ -11,6 +11,7 @@ enum robotOrientation {
 };
 
 robotOrientation robot_orientation = NIL;
+robotOrientation scanning_orientation = NIL;
 
 float voltage_robot_front;
 float voltage_robot_rear;
@@ -20,7 +21,6 @@ float distance_robot_rear;   // robot rear checker
 float distance_ball_front;   // ball finder
 
 short line_sensor_state;
-bool to_avoid_boundary = false;
 byte FL;
 byte FR;
 byte BL;
@@ -76,23 +76,9 @@ void distance_calculator() {
 }
 
 void get_line_sensor_state() {
-    /*
-    byte left;
-    byte right;
-    byte front;
-    byte back;
-
-    left = !SensorValue[line_FL] << 0;
-    right = !SensorValue[line_FR] << 1;
-    front = !SensorValue[line_BL] << 2;
-    back = !SensorValue[line_BR] << 3;
-    line_sensor_state = back | front | left | right;
-    */
-
     FL = !SensorValue[line_FL] << 0;
     FR = !SensorValue[line_FR] << 1;
     BL = !SensorValue[line_BL] << 2;
     BR = !SensorValue[line_BR] << 3;
     line_sensor_state = FL | FR | BL | BR;
-
 }
