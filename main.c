@@ -42,19 +42,23 @@ task action() {
 		//add in all possible combinations of sensor values and robot state values to determine corresponding robot action
 		switch(robot_state) {
 			case BALL_SEARCH_FIRST_BALL:
+				executed_robot_state = BALL_SEARCH_FIRST_BALL;
 				turn(-1, DEFAULT_MOTOR_TURNING_SPEED);
 				break;
 
 			case BALL_DETECTED: //drive towards ball
+				executed_robot_state = BALL_DETECTED;
 				motor [ball_in_motor] = 0;
 				drive(1, DEFAULT_MOTOR_DRIVING_SPEED);
 				break;
 
 			case BALL_DETECTED_COLLECT_BALL: //drive slower towards ball, start spinning ball_in_motor as close enough to ball
+				executed_robot_state = BALL_DETECTED_COLLECT_BALL;
 				collect_ball();
 				break;
 
 			case HOME: //both bumper switches pressed, ball in robot and not back robot, orientation NORTH means deposit ball
+				executed_robot_state = HOME;
 				motor [ball_in_motor] = 0;
 				stop_movement();
 				deposit_ball();
@@ -74,10 +78,10 @@ task action() {
 				turn_to_north();
 				is_turning = false;
 				if (executed_robot_state == robot_state) {drive(-1, DEFAULT_MOTOR_DRIVING_SPEED);}
-				executed_robot_state = BLANK;
 				break;
 
 			case ROBOT_FRONT_DETECTED_BALL_IN: //robot collected ball but robot in front, reverse away first
+				executed_robot_state = ROBOT_FRONT_DETECTED_BALL_IN;
 				ball_collected = true;
 				motor [ball_in_motor] = 0;
 				drive(-1, DEFAULT_MOTOR_DRIVING_SPEED);
@@ -90,7 +94,6 @@ task action() {
 				drive(-1, SLOW_MOTOR_DRIVING_SPEED);
 				sleep(500);
 				turn_angle(1, 20);
-				executed_robot_state = BLANK;
 				break;
 
 			case ROBOT_REAR_DETECTED_BALL_IN: //robot collected ball but robot behind, move foward first, turn 90 degrees, move back a bit
@@ -111,17 +114,16 @@ task action() {
 				drive(-1, DEFAULT_MOTOR_DRIVING_SPEED);
 				sleep(500);
 				stop_movement();
-				executed_robot_state = BLANK;
 				break;
 
 			case BALL_SEARCH_NO_ROBOT:
 				executed_robot_state = BALL_SEARCH_NO_ROBOT;
 				motor [ball_in_motor] = 0;
 				ball_scanning();
-				executed_robot_state = BLANK;
 				break;
 
 			case LINE_SENSOR_DETECTED:
+				executed_robot_state = LINE_SENSOR_DETECTED;
 				react_to_line_sensors();
 				break;
 
