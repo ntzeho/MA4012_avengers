@@ -42,8 +42,18 @@ bool line_sensor_state_check() {
     return false;
 }
 
+bool line_sensor_home_check() {
+    switch (line_sensor_state) {
+        case 12:
+        case 13:
+        case 14:
+            return true;
+    }
+    return false;
+}
+
 void robot_state_machine() {
-    if ((SensorValue [bumper_L] == 1 && SensorValue [bumper_R] == 1) || line_sensor_state == 12 || line_sensor_state == 13 || line_sensor_state == 14 && distance_robot_rear >= ROBOT_REAR_DISTANCE_THRESHOLD && (SensorValue [ball_switch] == 1 || ball_collected) && robot_orientation == NORTH) {
+    if ((SensorValue [bumper_L] == 1 && SensorValue [bumper_R] == 1) || line_sensor_home_check() && distance_robot_rear >= ROBOT_REAR_DISTANCE_THRESHOLD && (SensorValue [ball_switch] == 1 || ball_collected) && robot_orientation == NORTH) {
         detected_state = HOME;
     }
     else if (line_sensor_state > 0) {
@@ -52,16 +62,16 @@ void robot_state_machine() {
         }
         else {detected_state = LINE_SENSOR_DETECTED;}
     }
-    else if (distance_ball_front < ROBOT_BALL_SHORT_DISTANCE_THRESHOLD && SensorValue [ball_switch] == 0 && distance_robot_front > (distance_ball_front + ROBOT_SENSOR_DIFF_THRESHOLD)) {
+    else if (distance_ball_front < ROBOT_BALL_SHORT_DISTANCE_THRESHOLD && !ball_collected && distance_robot_front > (distance_ball_front + ROBOT_SENSOR_DIFF_THRESHOLD)) {
         detected_state = BALL_DETECTED_COLLECT_BALL;
     }
-    else if (distance_ball_front < ROBOT_BALL_DISTANCE_THRESHOLD && SensorValue [ball_switch] == 0 && distance_robot_front > (distance_ball_front + ROBOT_SENSOR_DIFF_THRESHOLD)) {
+    else if (distance_ball_front < ROBOT_BALL_DISTANCE_THRESHOLD && !ball_collected && distance_robot_front > (distance_ball_front + ROBOT_SENSOR_DIFF_THRESHOLD)) {
         detected_state = BALL_DETECTED;
     }
     else if ((SensorValue [ball_switch] == 1 || ball_collected) && distance_robot_front < ROBOT_FRONT_DISTANCE_THRESHOLD && distance_robot_rear >= ROBOT_REAR_DISTANCE_THRESHOLD) {
         detected_state = ROBOT_FRONT_DETECTED_BALL_IN;
     }
-    else if (SensorValue [ball_switch] == 0 && distance_robot_front < ROBOT_FRONT_DISTANCE_THRESHOLD && distance_robot_rear >= ROBOT_REAR_DISTANCE_THRESHOLD) {
+    else if (!ball_collected && distance_robot_front < ROBOT_FRONT_DISTANCE_THRESHOLD && distance_robot_rear >= ROBOT_REAR_DISTANCE_THRESHOLD) {
         detected_state = ROBOT_FRONT_DETECTED_BALL_OUT;
     }
     else if ((SensorValue [ball_switch] == 1 || ball_collected) && distance_robot_front >= ROBOT_FRONT_DISTANCE_THRESHOLD && distance_robot_rear < ROBOT_REAR_DISTANCE_THRESHOLD) {
@@ -87,45 +97,3 @@ void robot_state_machine() {
     }
 
 }
-
-/*
-void robot_state_machine() {
-    if (distance_robot_front < 15) {
-        detected_state = ROBOT_FRONT_DETECTED;
-    }
-    else if (distance_robot_rear < 15) {
-        detected_state = ROBOT_REAR_DETECTED;
-    }
-    else if (((distance_robot_front > 15)) && (distance_ball_front < 40)) {
-        detected_state = BALL_DETECTED;
-        }
-    else {
-        detected_state = BLANK;
-    }
-
-    if (detected_state == previous_detected_state) {
-        state_counter++;
-    }
-    else {
-        state_counter = 1;
-    }
-
-    previous_detected_state = detected_state;
-
-    if (state_counter >= 5 && robot_state != detected_state) {
-        robot_state = detected_state;
-
-        switch(robot_state) {
-            case BALL_DETECTED:
-                break;
-            case ROBOT_FRONT_DETECTED:
-                break;
-            case ROBOT_REAR_DETECTED:
-                break;
-            case BLANK:
-                break;
-        }
-        state_counter = 1;
-    }
-}
-*/

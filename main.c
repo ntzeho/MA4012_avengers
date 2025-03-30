@@ -24,7 +24,7 @@ short ball_count = 0;        //number of balls collected by robot
 char start_position = 'L';   //starting position of robot, default at left side
 bool ball_collected = false; //true when ball is collected
 
-//debugging variables
+//-----debugging variables
 bool is_turning = false;
 bool is_moving_after_first_ball = false;
 //-----end of debugging variables

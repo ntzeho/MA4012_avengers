@@ -11,7 +11,6 @@ enum robotOrientation {
 };
 
 robotOrientation robot_orientation = NIL;
-robotOrientation scanning_orientation = NIL;
 
 float voltage_robot_front;
 float voltage_robot_rear;

@@ -178,9 +178,48 @@ void turn_to_west() {
     }
 }
 
+void reorientate_R() {
+    switch (robot_orientation) {
+        case NORTHEAST:
+            turn_to_east();
+            break;
+
+        case SOUTHEAST:
+            turn_to_south();
+            break;
+
+        case SOUTHWEST:
+            turn_to_west();
+            break;
+
+        case NORTHWEST:
+            turn_to_north();
+            break;
+    }
+}
+
+void reorientate_L() {
+    switch (robot_orientation) {
+        case NORTHEAST:
+            turn_to_north();
+            break;
+
+        case SOUTHEAST:
+            turn_to_east();
+            break;
+
+        case SOUTHWEST:
+            turn_to_south();
+            break;
+
+        case NORTHWEST:
+            turn_to_west();
+            break;
+    }
+}
+
 void turn_90_degrees_R() {
-    robotOrientation turn_start_orientation = robot_orientation;
-    switch (turn_start_orientation) {
+    switch (robot_orientation) {
         case NORTH:
             turn_to_east();
             break;
@@ -196,12 +235,14 @@ void turn_90_degrees_R() {
         case WEST:
             turn_to_north();
             break;
+
+        default:
+            reorientate_R();
     }
 }
 
 void turn_90_degrees_L() {
-    robotOrientation turn_start_orientation = robot_orientation;
-    switch (turn_start_orientation) {
+    switch (robot_orientation) {
         case NORTH:
             turn_to_west();
             break;
@@ -217,12 +258,14 @@ void turn_90_degrees_L() {
         case WEST:
             turn_to_south();
             break;
+
+        default:
+            reorientate_L();
     }
 }
 
 void turn_180_degrees() {
-    robotOrientation turn_start_orientation = robot_orientation;
-    switch (turn_start_orientation) {
+    switch (robot_orientation) {
         case NORTH:
             turn_to_south();
             break;
@@ -247,26 +290,6 @@ void turn_360_degrees() {
     sleep_with_state_detection(1000);
     while (executed_robot_state == robot_state && turn_start_orientation != robot_orientation) {}
     stop_movement();
-}
-
-void reorientate(robotOrientation target_orientation) {
-    switch (target_orientation) {
-        case NORTH:
-            turn_to_north();
-            break;
-
-        case SOUTH:
-            turn_to_south();
-            break;
-
-        case EAST:
-            turn_to_east();
-            break;
-
-        case WEST:
-            turn_to_west();
-            break;
-    }
 }
 
 void turn_angle(short direction, short angle) {

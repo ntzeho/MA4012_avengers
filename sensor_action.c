@@ -1,11 +1,17 @@
 void react_to_line_sensors() {
     switch (line_sensor_state) {
         case 1: // FL
-        //reverse and turn right to align with nearest orientation
+            //reverse and turn right to align with nearest orientation
+            stop_movement();
+            drive_distance_fixed(-1, 15);
+            reorientate_R();
             break;
 
         case 2: // FR  
-        //reverse and turn left to align with nearest orientation
+            //reverse and turn left to align with nearest orientation
+            stop_movement();
+            drive_distance_fixed(-1, 15);
+            reorientate_L();
             break;
 
         case 3: // FL | FR
@@ -16,7 +22,10 @@ void react_to_line_sensors() {
             break;
 
         case 4: // BL
-        //drive forward and turn right to align with nearest orientation
+            //drive forward and turn right to align with nearest orientation
+            stop_movement();
+            drive_distance_fixed(1, 15);
+            reorientate_R();
             break;
 
         case 5: // FL | BL
@@ -31,7 +40,10 @@ void react_to_line_sensors() {
             break;
 
         case 8: // BR
-        //drive forward and turn left to align with nearest orientation
+            //drive forward and turn left to align with nearest orientation
+            stop_movement();
+            drive_distance_fixed(1, 15);
+            reorientate_L();
             break;
             
         case 10: // FR | BR
