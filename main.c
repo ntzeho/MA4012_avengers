@@ -119,6 +119,11 @@ task action() {
 				previous_executed_robot_state = BALL_SEARCH_NO_ROBOT;
 				break;
 
+			case LINE_SENSOR_DETECTED_BALL_COLLECTED:
+				executed_robot_state = LINE_SENSOR_DETECTED_BALL_COLLECTED;
+				react_to_line_sensors_homing();
+				previous_executed_robot_state = LINE_SENSOR_DETECTED_BALL_COLLECTED;
+
 			case LINE_SENSOR_DETECTED_BALL_DETECTED_COLLECT_BALL:
 				executed_robot_state = LINE_SENSOR_DETECTED_BALL_DETECTED_COLLECT_BALL;
 				react_to_line_sensors_collect_ball();

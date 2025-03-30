@@ -115,3 +115,33 @@ void react_to_line_sensors_collect_ball() {
 
     sleep(1);
 }
+
+void react_to_line_sensors_homing() {
+    switch (line_sensor_state) {
+        case 4: // BL
+        case 8: // BR
+        case 12: // BL | BR
+        case 13: // FL | BL | BR
+        case 14: // FR | BL | BR
+            drive_distance_fixed(1, 10);
+            break;
+
+        default:
+            /*
+            case 0: // NONE
+            case 1: // FL
+            case 2: // FR
+            case 3: // FL | FR
+            case 6: // FR | BL
+            case 5: // FL | BL
+            case 7: // FL | FR | BL
+            case 11: // FL | FR | BR
+            case 9: // FL | BR
+            case 10: // FR | BR
+            case 15: // ALL, enemy robot has their own yellow lines
+            */
+            break;
+    }
+
+    sleep(1);
+}

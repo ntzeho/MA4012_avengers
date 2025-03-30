@@ -2,6 +2,7 @@ enum robotState {
     // line sensor
     LINE_SENSOR_DETECTED,
     LINE_SENSOR_DETECTED_BALL_DETECTED_COLLECT_BALL,
+    LINE_SENSOR_DETECTED_BALL_COLLECTED,
 
     // long dist sensors for robot
     ROBOT_FRONT_DETECTED_BALL_IN,   // just continue moving backwards to home
@@ -37,6 +38,7 @@ bool line_sensor_state_check() {
     switch (executed_robot_state) {
         case LINE_SENSOR_DETECTED:
         case LINE_SENSOR_DETECTED_BALL_DETECTED_COLLECT_BALL:
+        case LINE_SENSOR_DETECTED_BALL_COLLECTED:
             return true;
     }
     return false;
@@ -60,6 +62,7 @@ void robot_state_machine() {
         if (previous_executed_robot_state == BALL_DETECTED_COLLECT_BALL && distance_robot_rear >= ROBOT_REAR_DISTANCE_THRESHOLD) {
             detected_state = LINE_SENSOR_DETECTED_BALL_DETECTED_COLLECT_BALL;
         }
+        else if (previous_executed_robot_state == BALL_COLLECTED_NO_ROBOT) {detected_state = LINE_SENSOR_DETECTED_BALL_COLLECTED;}
         else {detected_state = LINE_SENSOR_DETECTED;}
     }
     else if (distance_ball_front < ROBOT_BALL_SHORT_DISTANCE_THRESHOLD && !ball_collected && distance_robot_front > (distance_ball_front + ROBOT_SENSOR_DIFF_THRESHOLD)) {
