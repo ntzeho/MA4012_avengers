@@ -95,32 +95,20 @@ task action() {
 
 			case ROBOT_FRONT_DETECTED_BALL_OUT: //robot finding ball but robot in front, reverse slightly and turn 20 degrees
 				executed_robot_state = ROBOT_FRONT_DETECTED_BALL_OUT;
-				//TODO CHANGE CODE HERE
 				motor [ball_in_motor] = 0;
-				drive(-1, SLOW_MOTOR_DRIVING_SPEED);
-				sleep(500);
-				turn_angle(1, 20);
+				//TODO ADD CODE HERE
+
+				//end of added code
 				previous_executed_robot_state = ROBOT_FRONT_DETECTED_BALL_OUT;
 				break;
 
 			case ROBOT_REAR_DETECTED_BALL_IN: //robot collected ball but robot behind, move foward first, turn 90 degrees, move back a bit
 				executed_robot_state = ROBOT_REAR_DETECTED_BALL_IN;
-				//TODO CHANGE CODE HERE
 				ball_collected = true;
 				motor [ball_in_motor] = 0;
-				drive(1, 60);
-				sleep(500);
-				switch (start_position) {
-					case 'L':
-						turn_90_degrees_R();
-						break;
-					case 'R':
-						turn_90_degrees_L();
-						break;
-				}
-				drive(-1, DEFAULT_MOTOR_DRIVING_SPEED);
-				sleep(500);
-				stop_movement();
+				//TODO ADD CODE HERE
+
+				//end of added code
 				previous_executed_robot_state = ROBOT_REAR_DETECTED_BALL_IN;
 				break;
 
