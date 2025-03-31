@@ -43,6 +43,7 @@ task action() {
 		switch(robot_state) {
 			case BALL_SEARCH_FIRST_BALL:
 				executed_robot_state = BALL_SEARCH_FIRST_BALL;
+				motor [ball_in_motor] = 0; //added this to stop front motor from adding
 				turn(-1, DEFAULT_MOTOR_TURNING_SPEED);
 				previous_executed_robot_state = BALL_SEARCH_FIRST_BALL;
 				break;
