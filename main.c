@@ -75,10 +75,12 @@ task action() {
 				break;
 
 			case BALL_COLLECTED_NO_ROBOT: //robot collected ball and no nearby robots
+				if (previous_executed_robot_state != BALL_COLLECTED_NO_ROBOT){ //only stop when the prev executed robot state is not the same
+					motor [ball_in_motor] = 0;
+					stop_movement();
+				}
 				executed_robot_state = BALL_COLLECTED_NO_ROBOT;
 				ball_collected = true;
-				motor [ball_in_motor] = 0;
-				stop_movement();
 				is_turning = true;
 				turn_to_north();
 				is_turning = false;
