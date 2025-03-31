@@ -126,16 +126,19 @@ void react_to_line_sensors_homing() {
             drive_distance_fixed(1, 10);
             break;
 
+        case 1: // FL
+        case 2: // FR
+        case 3: // FL | FR
+        case 7: // FL | FR | BL
+        case 11: // FL | FR | BR
+            drive_distance_fixed(-1, 10);
+            break;
+        
         default:
             /*
             case 0: // NONE
-            case 1: // FL
-            case 2: // FR
-            case 3: // FL | FR
             case 6: // FR | BL
             case 5: // FL | BL
-            case 7: // FL | FR | BL
-            case 11: // FL | FR | BR
             case 9: // FL | BR
             case 10: // FR | BR
             case 15: // ALL, enemy robot has their own yellow lines
