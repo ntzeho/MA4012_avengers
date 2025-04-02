@@ -43,7 +43,7 @@ task action() {
 		switch(robot_state) {
 			case BALL_SEARCH_FIRST_BALL:
 				executed_robot_state = BALL_SEARCH_FIRST_BALL;
-				motor [ball_in_motor] = 0; //added this to stop front motor from adding
+				// motor [ball_in_motor] = 0;
 				turn(-1, DEFAULT_MOTOR_TURNING_SPEED);
 				previous_executed_robot_state = BALL_SEARCH_FIRST_BALL;
 				break;
@@ -84,7 +84,7 @@ task action() {
 				is_turning = true;
 				turn_to_north();
 				is_turning = false;
-				if (executed_robot_state == robot_state) {drive(-1, DEFAULT_MOTOR_DRIVING_SPEED);}
+				if (executed_robot_state == robot_state) {drive(-1, DEFAULT_MOTOR_HOME_DRIVING_SPEED);}
 				previous_executed_robot_state = BALL_COLLECTED_NO_ROBOT;
 				break;
 
@@ -117,7 +117,7 @@ task action() {
 
 			case BALL_SEARCH_NO_ROBOT:
 				executed_robot_state = BALL_SEARCH_NO_ROBOT;
-				motor [ball_in_motor] = 0;
+				// motor [ball_in_motor] = 0;
 				ball_scanning();
 				previous_executed_robot_state = BALL_SEARCH_NO_ROBOT;
 				break;

@@ -4,28 +4,36 @@ void react_to_line_sensors() {
             //reverse and turn right to align with nearest orientation
             stop_movement();
             drive_distance_fixed(-1, 15);
-            reorientate_R();
+            turn(1,DEFAULT_MOTOR_TURNING_SPEED);
+            sleep(DEFAULT_LINE_SENSOR_SLEEP);
+            // reorientate_R();
             break;
 
         case 2: // FR  
             //reverse and turn left to align with nearest orientation
             stop_movement();
             drive_distance_fixed(-1, 15);
-            reorientate_L();
+            turn(-1,DEFAULT_MOTOR_TURNING_SPEED);
+            sleep(DEFAULT_LINE_SENSOR_SLEEP);
+            // reorientate_L();
             break;
 
         case 3: // FL | FR
             stop_movement();         
             drive_distance_fixed(-1, 30);
-            if (start_position == 'L') {turn_90_degrees_R();}
-            else {turn_90_degrees_L();}
+            turn(-1,DEFAULT_MOTOR_TURNING_SPEED);
+            sleep(DEFAULT_LINE_SENSOR_SLEEP);
+            // if (start_position == 'L') {turn_90_degrees_R();}
+            // else {turn_90_degrees_L();}
             break;
 
         case 4: // BL
             //drive forward and turn right to align with nearest orientation
             stop_movement();
             drive_distance_fixed(1, 15);
-            reorientate_R();
+            turn(-1,DEFAULT_MOTOR_TURNING_SPEED);
+            sleep(DEFAULT_LINE_SENSOR_SLEEP);
+            // reorientate_R();
             break;
 
         case 5: // FL | BL
@@ -43,7 +51,10 @@ void react_to_line_sensors() {
             //drive forward and turn left to align with nearest orientation
             stop_movement();
             drive_distance_fixed(1, 15);
-            reorientate_L();
+            turn(1,DEFAULT_MOTOR_TURNING_SPEED);
+            sleep(DEFAULT_LINE_SENSOR_SLEEP);
+            // reorientate_L();
+
             break;
             
         case 10: // FR | BR
@@ -59,16 +70,19 @@ void react_to_line_sensors() {
 
         case 12: // BL | BR
             stop_movement();
+            sleep(10); //added this to prevent bouncing at HOME
             drive_distance_fixed(1, 30);
             break;
         
         case 13: // FL | BL | BR
             stop_movement();
+            sleep(10); //added this to prevent bouncing at HOME
             drive_distance_fixed(1, 30); //will move to case 5
             break;
 
         case 14: // FR | BL | BR
             stop_movement();
+            sleep(10); //added this to prevent bouncing at HOME
             drive_distance_fixed(1, 30); //will move to case 10
             break;
 

@@ -85,7 +85,8 @@ void turn_to_north() {
         case SOUTHEAST:
         case SOUTH:
             turn(-1, DEFAULT_MOTOR_TURNING_NORTH_SPEED);
-            while (robot_orientation != NORTH && executed_robot_state == robot_state && !line_sensor_state_check()) {}
+            // while (robot_orientation != NORTH && executed_robot_state == robot_state && !line_sensor_state_check()) {}
+            while (robot_orientation != NORTH (&& executed_robot_state == robot_state && !line_sensor_state_check()) || line_sensor_state_check()) {}
             // stop_movement(); // remove this for smooth movement
             break;
 
@@ -94,7 +95,8 @@ void turn_to_north() {
         case WEST:
         case NORTHWEST:
             turn(1, DEFAULT_MOTOR_TURNING_NORTH_SPEED);
-            while (robot_orientation != NORTH && executed_robot_state == robot_state && !line_sensor_state_check()) {}
+            // while (robot_orientation != NORTH && executed_robot_state == robot_state && !line_sensor_state_check()) {}
+            while (robot_orientation != NORTH (&& executed_robot_state == robot_state && !line_sensor_state_check()) || line_sensor_state_check()) {}
             // stop_movement(); //remove this for smooth movement
             break;
     }
@@ -111,7 +113,8 @@ void turn_to_east() {
         case SOUTHWEST:
         case WEST:
             turn(-1, DEFAULT_MOTOR_TURNING_SPEED);
-            while (robot_orientation != EAST && executed_robot_state == robot_state && !line_sensor_state_check()) {}
+            // while (robot_orientation != EAST && executed_robot_state == robot_state && !line_sensor_state_check()) {}
+            while (robot_orientation != EAST (&& executed_robot_state == robot_state && !line_sensor_state_check()) || line_sensor_state_check()) {}
             stop_movement();
             break;
 
@@ -120,7 +123,8 @@ void turn_to_east() {
         case NORTH:
         case NORTHEAST:
             turn(1, DEFAULT_MOTOR_TURNING_SPEED);
-            while (robot_orientation != EAST && executed_robot_state == robot_state && !line_sensor_state_check()) {}
+            // while (robot_orientation != EAST && executed_robot_state == robot_state && !line_sensor_state_check()) {}
+            while (robot_orientation != EAST (&& executed_robot_state == robot_state && !line_sensor_state_check()) || line_sensor_state_check()) {}
             stop_movement();
             break;
     }
@@ -137,7 +141,8 @@ void turn_to_south() {
         case NORTHWEST:
         case NORTH:
             turn(-1, DEFAULT_MOTOR_TURNING_SPEED);
-            while (robot_orientation != SOUTH && executed_robot_state == robot_state && !line_sensor_state_check()) {}
+            // while (robot_orientation != SOUTH && executed_robot_state == robot_state && !line_sensor_state_check()) {}
+            while (robot_orientation != SOUTH (&& executed_robot_state == robot_state && !line_sensor_state_check()) || line_sensor_state_check()) {}
             stop_movement();
             break;
 
@@ -146,7 +151,8 @@ void turn_to_south() {
         case EAST:
         case SOUTHEAST:
             turn(1, DEFAULT_MOTOR_TURNING_SPEED);
-            while (robot_orientation != SOUTH && executed_robot_state == robot_state && !line_sensor_state_check()) {}
+            // while (robot_orientation != SOUTH && executed_robot_state == robot_state && !line_sensor_state_check()) {}
+            while (robot_orientation != SOUTH (&& executed_robot_state == robot_state && !line_sensor_state_check()) || line_sensor_state_check()) {}
             stop_movement();
             break;
     }
@@ -163,7 +169,8 @@ void turn_to_west() {
         case NORTHEAST:
         case EAST:
             turn(-1, DEFAULT_MOTOR_TURNING_SPEED);
-            while (robot_orientation != WEST && executed_robot_state == robot_state && !line_sensor_state_check()) {}
+            // while (robot_orientation != WEST && executed_robot_state == robot_state && !line_sensor_state_check()) {}
+            while (robot_orientation != WEST (&& executed_robot_state == robot_state && !line_sensor_state_check()) || line_sensor_state_check()) {}
             stop_movement();
             break;
 
@@ -172,7 +179,8 @@ void turn_to_west() {
         case SOUTH:
         case SOUTHWEST:
             turn(1, DEFAULT_MOTOR_TURNING_SPEED);
-            while (robot_orientation != WEST && executed_robot_state == robot_state && !line_sensor_state_check()) {}
+            // while (robot_orientation != WEST && executed_robot_state == robot_state && !line_sensor_state_check()) {}
+            while (robot_orientation != WEST (&& executed_robot_state == robot_state && !line_sensor_state_check()) || line_sensor_state_check()) {}
             stop_movement();
             break;
     }
