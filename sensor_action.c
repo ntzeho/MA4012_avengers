@@ -107,6 +107,7 @@ void react_to_line_sensors_collect_ball() {
             if (boundary_ball_count < MAX_BOUNDARY_BALL_TRIES ) {
                 drive_distance_fixed(1, 10);
                 drive_distance_fixed(-1, 30);
+                boundary_ball_count++;
             } else {
                 boundary_ball_count = 0;
                 drive_distance_fixed(-1, 30);
@@ -120,6 +121,7 @@ void react_to_line_sensors_collect_ball() {
             if (boundary_ball_count < MAX_BOUNDARY_BALL_TRIES ) {
                 drive_distance_fixed(1, 10);
                 drive_distance_fixed(-1, 30);
+                boundary_ball_count++;
             } else {
                 boundary_ball_count = 0;
                 drive_distance_fixed(-1, 30);

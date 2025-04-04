@@ -75,10 +75,10 @@ void robot_state_machine() {
         else if (previous_executed_robot_state == BALL_COLLECTED_NO_ROBOT) {detected_state = LINE_SENSOR_DETECTED_BALL_COLLECTED;}
         else {detected_state = LINE_SENSOR_DETECTED;}
     }
-    else if (robot_orientation != SOUTH && distance_ball_rejection > ROBOT_BALL_REJECTION_SHORT_DISTANCE_THRESHOLD && distance_ball_front < ROBOT_BALL_SHORT_DISTANCE_THRESHOLD && !ball_collected && distance_robot_front > (distance_ball_front + ROBOT_SENSOR_DIFF_THRESHOLD)) {
+    else if (robot_orientation != SOUTH && distance_ball_front < ROBOT_BALL_SHORT_DISTANCE_THRESHOLD && !ball_collected && distance_robot_front > (distance_ball_front + ROBOT_SENSOR_DIFF_THRESHOLD)) {
         detected_state = BALL_DETECTED_COLLECT_BALL;
     }
-    else if (robot_orientation != SOUTH && distance_ball_rejection > ROBOT_BALL_REJECTION_DISTANCE_THRESHOLD && distance_ball_front < ROBOT_BALL_DISTANCE_THRESHOLD && !ball_collected && distance_robot_front > (distance_ball_front + ROBOT_SENSOR_DIFF_THRESHOLD)) {
+    else if (robot_orientation != SOUTH && distance_ball_front < ROBOT_BALL_DISTANCE_THRESHOLD && !ball_collected && distance_robot_front > (distance_ball_front + ROBOT_SENSOR_DIFF_THRESHOLD)) {
         detected_state = BALL_DETECTED;
     }
     else if ((SensorValue [ball_switch] == 1 || ball_collected) && distance_robot_front < ROBOT_FRONT_DISTANCE_THRESHOLD && distance_robot_rear >= ROBOT_REAR_DISTANCE_THRESHOLD) {
