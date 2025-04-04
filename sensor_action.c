@@ -3,37 +3,39 @@ void react_to_line_sensors() {
         case 1: // FL
             //reverse and turn right to align with nearest orientation
             stop_movement();
-            drive_distance_fixed(-1, 15);
-            turn(1,DEFAULT_MOTOR_TURNING_SPEED);
-            sleep(DEFAULT_LINE_SENSOR_SLEEP);
-            // reorientate_R();
+            drive_distance_fixed(-1, 30);
+            // turn(1,DEFAULT_MOTOR_TURNING_SPEED);
+            // sleep(DEFAULT_LINE_SENSOR_SLEEP);
+            //reorientate_R();
+            turn_90_degrees_L();
+            // turn_90_degrees_L();
             break;
 
         case 2: // FR  
             //reverse and turn left to align with nearest orientation
             stop_movement();
-            drive_distance_fixed(-1, 15);
-            turn(-1,DEFAULT_MOTOR_TURNING_SPEED);
-            sleep(DEFAULT_LINE_SENSOR_SLEEP);
-            // reorientate_L();
+            drive_distance_fixed(-1, 30);
+            // turn(-1,DEFAULT_MOTOR_TURNING_SPEED);
+            // sleep(DEFAULT_LINE_SENSOR_SLEEP);
+            //reorientate_L();
+            turn_90_degrees_L();
             break;
 
         case 3: // FL | FR
             stop_movement();         
             drive_distance_fixed(-1, 30);
-            turn(-1,DEFAULT_MOTOR_TURNING_SPEED);
-            sleep(DEFAULT_LINE_SENSOR_SLEEP);
-            // if (start_position == 'L') {turn_90_degrees_R();}
-            // else {turn_90_degrees_L();}
+            // turn(-1,DEFAULT_MOTOR_TURNING_SPEED);
+            // sleep(DEFAULT_LINE_SENSOR_SLEEP);
+            turn_90_degrees_L();
             break;
 
         case 4: // BL
             //drive forward and turn right to align with nearest orientation
             stop_movement();
             drive_distance_fixed(1, 15);
-            turn(-1,DEFAULT_MOTOR_TURNING_SPEED);
-            sleep(DEFAULT_LINE_SENSOR_SLEEP);
-            // reorientate_R();
+            // turn(-1,DEFAULT_MOTOR_TURNING_SPEED);
+            // sleep(DEFAULT_LINE_SENSOR_SLEEP);
+            reorientate_R();
             break;
 
         case 5: // FL | BL
@@ -51,10 +53,10 @@ void react_to_line_sensors() {
             //drive forward and turn left to align with nearest orientation
             stop_movement();
             drive_distance_fixed(1, 15);
-            turn(1,DEFAULT_MOTOR_TURNING_SPEED);
-            sleep(DEFAULT_LINE_SENSOR_SLEEP);
-            // reorientate_L();
-
+            // turn(1,DEFAULT_MOTOR_TURNING_SPEED);
+            // sleep(DEFAULT_LINE_SENSOR_SLEEP);
+            //reorientate_L();
+            reorientate_R();
             break;
             
         case 10: // FR | BR
@@ -70,19 +72,19 @@ void react_to_line_sensors() {
 
         case 12: // BL | BR
             stop_movement();
-            sleep(10); //added this to prevent bouncing at HOME
+            // sleep(10); //added this to prevent bouncing at HOME
             drive_distance_fixed(1, 30);
             break;
         
         case 13: // FL | BL | BR
             stop_movement();
-            sleep(10); //added this to prevent bouncing at HOME
+            // sleep(10); //added this to prevent bouncing at HOME
             drive_distance_fixed(1, 30); //will move to case 5
             break;
 
         case 14: // FR | BL | BR
             stop_movement();
-            sleep(10); //added this to prevent bouncing at HOME
+            // sleep(10); //added this to prevent bouncing at HOME
             drive_distance_fixed(1, 30); //will move to case 10
             break;
 
@@ -102,13 +104,43 @@ void react_to_line_sensors() {
 void react_to_line_sensors_collect_ball() {
     switch (line_sensor_state) {
         case 1: // FL
+            if (boundary_ball_count < MAX_BOUNDARY_BALL_TRIES ) {
+                drive_distance_fixed(1, 10);
+                drive_distance_fixed(-1, 30);
+            } else {
+                boundary_ball_count = 0;
+                drive_distance_fixed(-1, 30);
+                turn_90_degrees_L();
+                // turn_90_degrees_L();
+            }
         case 2: // FR
+        // case 3: // FL | FR
+        // case 7: // FL | FR | BL
+        // case 11: // FL | FR | BR
+            if (boundary_ball_count < MAX_BOUNDARY_BALL_TRIES ) {
+                drive_distance_fixed(1, 10);
+                drive_distance_fixed(-1, 30);
+            } else {
+                boundary_ball_count = 0;
+                drive_distance_fixed(-1, 30);
+                turn_90_degrees_L();
+            }
+            
+            break;
+
         case 3: // FL | FR
         case 7: // FL | FR | BL
         case 11: // FL | FR | BR
-            drive_distance_fixed(1, 10);
-            drive_distance_fixed(-1, 15);
+
+            if (robot_orientation == SOUTH) {
+                drive_distance_fixed(-1, 30);
+                turn_to_north();
+            } else {
+                drive_distance_fixed(1, 10);
+                drive_distance_fixed(-1, 30);
+            }
             break;
+            
 
         default:
             /*
@@ -137,7 +169,9 @@ void react_to_line_sensors_homing() {
         case 12: // BL | BR
         case 13: // FL | BL | BR
         case 14: // FR | BL | BR
-            drive_distance_fixed(1, 10);
+            if (robot_orientation != NORTH){
+                drive_distance_fixed(1, 10);
+            }
             break;
 
         case 1: // FL

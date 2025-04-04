@@ -54,8 +54,18 @@ bool line_sensor_home_check() {
     return false;
 }
 
+bool robot_orientation_home_check() {
+    switch (robot_orientation) {
+        case NORTH:
+        case NORTHEAST:
+        case NORTHWEST:
+            return true;
+    }
+    return false;
+}
+
 void robot_state_machine() {
-    if ((SensorValue [bumper_L] == 1 && SensorValue [bumper_R] == 1) || line_sensor_home_check() && distance_robot_rear >= ROBOT_REAR_DISTANCE_THRESHOLD && (SensorValue [ball_switch] == 1 || ball_collected) && robot_orientation == NORTH) {
+    if ((SensorValue [bumper_L] == 1 && SensorValue [bumper_R] == 1) || line_sensor_home_check() && distance_robot_rear >= ROBOT_REAR_DISTANCE_THRESHOLD && (SensorValue [ball_switch] == 1 || ball_collected) && robot_orientation_home_check()) {
         detected_state = HOME;
     }
     else if (line_sensor_state > 0) {
@@ -65,10 +75,10 @@ void robot_state_machine() {
         else if (previous_executed_robot_state == BALL_COLLECTED_NO_ROBOT) {detected_state = LINE_SENSOR_DETECTED_BALL_COLLECTED;}
         else {detected_state = LINE_SENSOR_DETECTED;}
     }
-    else if (distance_ball_front < ROBOT_BALL_SHORT_DISTANCE_THRESHOLD && !ball_collected && distance_robot_front > (distance_ball_front + ROBOT_SENSOR_DIFF_THRESHOLD)) {
+    else if (robot_orientation != SOUTH && distance_ball_rejection > ROBOT_BALL_REJECTION_SHORT_DISTANCE_THRESHOLD && distance_ball_front < ROBOT_BALL_SHORT_DISTANCE_THRESHOLD && !ball_collected && distance_robot_front > (distance_ball_front + ROBOT_SENSOR_DIFF_THRESHOLD)) {
         detected_state = BALL_DETECTED_COLLECT_BALL;
     }
-    else if (distance_ball_front < ROBOT_BALL_DISTANCE_THRESHOLD && !ball_collected && distance_robot_front > (distance_ball_front + ROBOT_SENSOR_DIFF_THRESHOLD)) {
+    else if (robot_orientation != SOUTH && distance_ball_rejection > ROBOT_BALL_REJECTION_DISTANCE_THRESHOLD && distance_ball_front < ROBOT_BALL_DISTANCE_THRESHOLD && !ball_collected && distance_robot_front > (distance_ball_front + ROBOT_SENSOR_DIFF_THRESHOLD)) {
         detected_state = BALL_DETECTED;
     }
     else if ((SensorValue [ball_switch] == 1 || ball_collected) && distance_robot_front < ROBOT_FRONT_DISTANCE_THRESHOLD && distance_robot_rear >= ROBOT_REAR_DISTANCE_THRESHOLD) {

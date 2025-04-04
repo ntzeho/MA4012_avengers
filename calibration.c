@@ -1,7 +1,6 @@
 #pragma config(Sensor, in2,    dist_robot_front, sensorAnalog)
 #pragma config(Sensor, in3,    dist_ball_front, sensorAnalog)
-#pragma config(Sensor, in6,    dist_robot_rear, sensorAnalog)
-#pragma config(Sensor, in8,    dist_ball_rejection, sensorAnalog)
+#pragma config(Sensor, in8,    dist_robot_rear, sensorAnalog)
 #pragma config(Sensor, dgtl1,  compass_west,   sensorDigitalIn)
 #pragma config(Sensor, dgtl2,  compass_south,  sensorDigitalIn)
 #pragma config(Sensor, dgtl3,  compass_east,   sensorDigitalIn)
@@ -22,9 +21,9 @@
 
 short cycles = 0;            //detect number of times on-off switch was pressed while robot is on
 short ball_count = 0;        //number of balls collected by robot
-short boundary_ball_count = 0; //number of tries to pick up ball at boundary
-char start_position = 'R';   //starting position of robot, default at right side
+char start_position = 'L';   //starting position of robot, default at left side
 bool ball_collected = false; //true when ball is collected
+short sleep_time = 0;
 
 //-----debugging variables
 bool is_turning = false;
@@ -52,11 +51,6 @@ task action() {
 
 			case BALL_DETECTED: //drive towards ball
 				executed_robot_state = BALL_DETECTED;
-				if (previous_executed_robot_state != robot_state){
-					stop_movement();
-					turn(1,DEFAULT_MOTOR_TURNING_SPEED);
-          sleep(50);
-          stop_movement();}
 				motor [ball_in_motor] = 0;
 				drive(1, DEFAULT_MOTOR_DRIVING_SPEED);
 				previous_executed_robot_state = BALL_DETECTED;
@@ -70,10 +64,9 @@ task action() {
 
 			case HOME: //both bumper switches pressed, ball in robot and not back robot, orientation NORTH means deposit ball
 				executed_robot_state = HOME;
-				motor [ball_in_motor] = -DEFAULT_BALL_MOTOR_SPEED; //adjusted this
+				motor [ball_in_motor] = 0;
 				stop_movement();
 				deposit_ball();
-				motor [ball_in_motor] = 0; //adjusted this
 				ball_collected = false;
 				ball_count++;
 				is_moving_after_first_ball = true;
@@ -108,7 +101,7 @@ task action() {
 				executed_robot_state = ROBOT_FRONT_DETECTED_BALL_OUT;
 				motor [ball_in_motor] = 0;
 				//TODO ADD CODE HERE
-				drive_distance(-1, 30);
+
 				//end of added code
 				previous_executed_robot_state = ROBOT_FRONT_DETECTED_BALL_OUT;
 				break;
@@ -118,7 +111,7 @@ task action() {
 				ball_collected = true;
 				motor [ball_in_motor] = 0;
 				//TODO ADD CODE HERE
-				drive_distance(1, 30);
+
 				//end of added code
 				previous_executed_robot_state = ROBOT_REAR_DETECTED_BALL_IN;
 				break;
@@ -179,16 +172,16 @@ task full_stop() { // stop all tasks and movements except for emergency_stop and
 
 void wait_for_on() {
 	while (SensorValue [on_switch] == 0) {/* Nothing is executed when limit switch isn't pressed */}
-	if (cycles == 0) {clearTimer(T1);}
-	while (SensorValue [on_switch] == 1) {sleep(100);}
-	cycles++;
-	if (cycles == 1) {
-		if (time1[T1] >= 2000) {start_position = 'L';} // robot start on left position when on switch held for at least 2s
-		move_field(); //move field only if robot did not start again
-	}
-	startTask(detection);
-	startTask(action);
-	startTask(full_stop);
+	//sleep(2000);
+	clearTimer(T1);
+	drive(1, 127);
+	sleep(1800);
+
+	//while (SensorValue [on_switch] == 0) {
+		//sleep(100);
+	//	/* Nothing is executed when limit switch isn't pressed */}
+	sleep_time = time1[T1];
+	stop_movement();
 }
 
 task main() {
