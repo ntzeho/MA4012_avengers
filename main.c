@@ -159,8 +159,11 @@ task detection() {
 		distance_calculator();
 		get_direction();
 		get_line_sensor_state();
-		robot_state_machine();
 	}
+}
+
+task robot_state_manager() {
+	while (true) {robot_state_machine();}
 }
 
 task full_stop() { // stop all tasks and movements except for emergency_stop and main
@@ -168,6 +171,7 @@ task full_stop() { // stop all tasks and movements except for emergency_stop and
 
 	stopTask(detection);
 	stopTask(action);
+	stopTask(robot_state_manager);
 	stop_movement();
 	motor [ball_in_motor] = 0;
 	motor [ball_out_motor] = 0;
@@ -185,6 +189,7 @@ void wait_for_on() {
 		move_field(); //move field only if robot did not start again
 	}
 	startTask(detection);
+	startTask(robot_state_manager);
 	startTask(action);
 	startTask(full_stop);
 }
