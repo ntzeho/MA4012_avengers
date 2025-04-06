@@ -18,6 +18,7 @@ void turn(short direction, short speed) {
 void stop_movement() {
     motor [left_motor] = 0;
     motor [right_motor] = 0;
+    sleep(50);
 }
 
 void drive_distance(short direction, short distance) {
@@ -362,8 +363,10 @@ void collect_ball() {
 }
 
 void deposit_ball() {
+    motor [ball_in_motor] = -DEFAULT_BALL_MOTOR_SPEED; 
     motor [ball_out_motor] = -DEFAULT_BALL_MOTOR_SPEED;
     sleep(BALL_OUT_MOTOR_SLEEP_TIME);
+    motor [ball_in_motor] = 0;
     motor [ball_out_motor] = 0;
 }
 

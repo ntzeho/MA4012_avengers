@@ -50,13 +50,20 @@ task action() {
 				previous_executed_robot_state = BALL_SEARCH_FIRST_BALL;
 				break;
 
+			case BALL_SEARCH_NO_ROBOT:
+				executed_robot_state = BALL_SEARCH_NO_ROBOT;
+				// motor [ball_in_motor] = 0;
+				ball_scanning();
+				previous_executed_robot_state = BALL_SEARCH_NO_ROBOT;
+				break;
+			
 			case BALL_DETECTED: //drive towards ball
 				executed_robot_state = BALL_DETECTED;
 				if (previous_executed_robot_state != robot_state){
 					stop_movement();
 					turn(1,DEFAULT_MOTOR_TURNING_SPEED);
-          sleep(50);
-          stop_movement();}
+					sleep(50);
+					stop_movement();}
 				motor [ball_in_motor] = 0;
 				drive(1, DEFAULT_MOTOR_DRIVING_SPEED);
 				previous_executed_robot_state = BALL_DETECTED;
@@ -70,10 +77,8 @@ task action() {
 
 			case HOME: //both bumper switches pressed, ball in robot and not back robot, orientation NORTH means deposit ball
 				executed_robot_state = HOME;
-				motor [ball_in_motor] = -DEFAULT_BALL_MOTOR_SPEED; //adjusted this
 				stop_movement();
 				deposit_ball();
-				motor [ball_in_motor] = 0; //adjusted this
 				ball_collected = false;
 				ball_count++;
 				is_moving_after_first_ball = true;
@@ -121,13 +126,6 @@ task action() {
 				drive_distance(1, 30);
 				//end of added code
 				previous_executed_robot_state = ROBOT_REAR_DETECTED_BALL_IN;
-				break;
-
-			case BALL_SEARCH_NO_ROBOT:
-				executed_robot_state = BALL_SEARCH_NO_ROBOT;
-				// motor [ball_in_motor] = 0;
-				ball_scanning();
-				previous_executed_robot_state = BALL_SEARCH_NO_ROBOT;
 				break;
 
 			case LINE_SENSOR_DETECTED_BALL_COLLECTED:
