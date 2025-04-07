@@ -14,12 +14,12 @@ robotOrientation robot_orientation = NIL;
 
 float voltage_robot_front;
 float voltage_robot_rear;
-float voltage_ball_front;
-float voltage_ball_rejection;
+float voltage_ball_front_right;
+float voltage_ball_front_left;
 float distance_robot_front;  // robot front checker
 float distance_robot_rear;   // robot rear checker
-float distance_ball_front;   // ball finder
-float distance_ball_rejection; // ball rejection
+float distance_ball_front_right;   // ball finder
+float distance_ball_front_left; // ball rejection
 
 float distance_ball_front_temp;
 int distance_ball_front_counter;
@@ -65,14 +65,15 @@ void get_direction() {
 void distance_calculator() {
     voltage_robot_front = (SensorValue [dist_robot_front]) * (5.0 / 4096.0);
     voltage_robot_rear = (SensorValue [dist_robot_rear]) * (5.0 / 4096.0);
-    voltage_ball_front = (SensorValue [dist_ball_front]) * (5.0 / 4096.0);
-    voltage_ball_rejection = (SensorValue [dist_ball_rejection]) * (5.0 / 4096.0);
+    voltage_ball_front_right = (SensorValue [dist_ball_front_right]) * (5.0 / 4096.0);
+    voltage_ball_front_left = (SensorValue [dist_ball_front_left]) * (5.0 / 4096.0);
 
-    distance_robot_front = 27.534 * pow(voltage_robot_front , -1.207); //to recalibrate as it is new sensor
+    distance_robot_front = 27.534 * pow(voltage_robot_front, -1.207); //to recalibrate as it is new sensor
     distance_robot_rear = pow(2.718281828, 2.507) * pow(voltage_robot_rear , -1.123);
-    distance_ball_rejection = 27.534 * pow(voltage_ball_rejection , -1.207);
+    distance_ball_front_left = 27.534 * pow(voltage_ball_front_left , -1.207);
+    distance_ball_front_right = 27.534 * pow(voltage_ball_front_right , -1.207);
     
-    distance_ball_front_temp = 27.534 * pow(voltage_ball_front , -1.207);
+    //distance_ball_front_temp = 27.534 * pow(voltage_ball_front , -1.207);
     // distance_ball_front = 27.534 * pow(voltage_ball_front , -1.207);
     //distance_long2 = 27.194 * pow(voltage_long2, -1.121); //pow(2.718281828, 3.303)
 
@@ -81,14 +82,14 @@ void distance_calculator() {
     // if (distance_long2 > 50) {distance_long2 = 50;}
     
     // added this section for far distance rejection
-    if (distance_ball_front_temp <= ROBOT_BALL_DISTANCE_THRESHOLD) {distance_ball_front_counter++;}
-    else {distance_ball_front_counter = 1;}
+    // if (distance_ball_front_temp <= ROBOT_BALL_DISTANCE_THRESHOLD) {distance_ball_front_counter++;}
+    // else {distance_ball_front_counter = 1;}
 
-    if (distance_ball_front_counter >= FRONT_DIST_CORRECT_VALUE){
-        distance_ball_front = distance_ball_front_temp;
-    }
-    else{distance_ball_front = ROBOT_BALL_DISTANCE_THRESHOLD + 10;}
-    sleep(50);
+    // if (distance_ball_front_counter >= FRONT_DIST_CORRECT_VALUE){
+    //     distance_ball_front = distance_ball_front_temp;
+    // }
+    // else{distance_ball_front = ROBOT_BALL_DISTANCE_THRESHOLD + 10;}
+    sleep(100);
 }
 
 void get_line_sensor_state() {

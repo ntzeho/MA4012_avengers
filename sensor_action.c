@@ -8,7 +8,7 @@ void react_to_line_sensors() {
             // sleep(DEFAULT_LINE_SENSOR_SLEEP);
             //reorientate_R();
             turn_90_degrees_L();
-            // turn_90_degrees_L();
+            //turn_90_degrees_R();
             break;
 
         case 2: // FR  
