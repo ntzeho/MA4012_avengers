@@ -36,3 +36,5 @@ const short ROBOT_STATE_CORRECT_VALUE = 10;
 const short FRONT_DIST_CORRECT_VALUE = 1;
 
 const short MAX_BOUNDARY_BALL_TRIES = 3;
+
+const short HOMING_BOTH_SIDES_CHECK_TIME = 250;

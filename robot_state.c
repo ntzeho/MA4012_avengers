@@ -34,6 +34,25 @@ robotState detected_state = START;
 robotState previous_detected_state = START;
 int state_counter = 0;
 
+bool bumper_home_check() {
+    if (SensorValue [bumper_L] == 1 && SensorValue [bumper_R] == 1) {return true;}
+    else if (SensorValue [bumper_L] == 1) {
+        clearTimer(T2);
+        while (time1[T2] < HOMING_BOTH_SIDES_CHECK_TIME) {
+            if (SensorValue [bumper_R] == 1) {return true;}
+        }
+        return false;
+    }
+    else if (SensorValue [bumper_R] == 1) {
+        clearTimer(T2);
+        while (time1[T2] < HOMING_BOTH_SIDES_CHECK_TIME) {
+            if (SensorValue [bumper_L] == 1) {return true;}
+        }
+        return false;
+    }
+    return false;
+}
+
 bool line_sensor_state_check() {
     if (robot_state == BALL_DETECTED) {return false;};
     switch (executed_robot_state) {
@@ -51,6 +70,21 @@ bool line_sensor_home_check() {
         case 13:
         case 14:
             return true;
+    }
+    
+    if (BR == 1) {
+        clearTimer(T3);
+        while (time1[T3] < HOMING_BOTH_SIDES_CHECK_TIME) {
+            if (BL == 1) {return true;}
+        }
+        return false;
+    }
+    else if (BL == 1) {
+        clearTimer(T3);
+        while (time1[T3] < HOMING_BOTH_SIDES_CHECK_TIME) {
+            if (BR == 1) {return true;}
+        }
+        return false;
     }
     return false;
 }
@@ -86,7 +120,7 @@ bool ball_check(short distance_threshold) {
 }
 
 void robot_state_machine() {
-    if ((SensorValue [bumper_L] == 1 && SensorValue [bumper_R] == 1) || line_sensor_home_check() && distance_robot_rear >= ROBOT_REAR_DISTANCE_THRESHOLD && (SensorValue [ball_switch] == 1 || ball_collected) && robot_orientation_home_check()) {
+    if (distance_robot_rear >= ROBOT_REAR_DISTANCE_THRESHOLD && (SensorValue [ball_switch] == 1 || ball_collected) && robot_orientation_home_check() && (bumper_home_check() || line_sensor_home_check())) {
         detected_state = HOME;
     }
     else if (line_sensor_state > 0) {
