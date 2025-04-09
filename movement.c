@@ -4,7 +4,7 @@ void sleep_with_state_detection(short sleep_time) {
 }
 
 void drive(short direction, short speed) {
-    motor [left_motor] = (-speed * 0.98) * direction;
+    motor [left_motor] = (-speed * LEFT_MOTOR_OFFSET_STRAIGHT) * direction;
     motor [right_motor] = speed * direction;
 }
 
@@ -12,13 +12,23 @@ void turn(short direction, short speed) {
     //assuming 1 is forward and -1 is backward:
     //direction = 1 means turn right, direction = -1 means turn left
 	motor [left_motor] = -speed * direction;
-	motor [right_motor] = -speed * direction;
+	motor [right_motor] = (-speed * RIGHT_MOTOR_OFFSET_TURNING) * direction;
 }
 
 void stop_movement() {
     motor [left_motor] = 0;
     motor [right_motor] = 0;
     sleep(50);
+}
+
+void drive_left(short direction, short speed) {
+    motor [left_motor] = -speed * direction;
+    motor [right_motor] = speed * VEERING_OFFSET * direction;
+}
+
+void drive_right(short direction, short speed) {
+    motor [left_motor] = (-speed * VEERING_OFFSET) * direction;
+    motor [right_motor] = speed * direction;
 }
 
 void drive_distance(short direction, short distance) {

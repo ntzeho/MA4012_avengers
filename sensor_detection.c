@@ -18,11 +18,14 @@ float voltage_ball_front_right;
 float voltage_ball_front_left;
 float distance_robot_front;  // robot front checker
 float distance_robot_rear;   // robot rear checker
-float distance_ball_front_right;   // ball finder
-float distance_ball_front_left; // ball rejection
+float distance_ball_front_right;   // ball left
+float distance_ball_front_left;  // ball right
 
-float distance_ball_front_temp;
-int distance_ball_front_counter;
+float distance_ball_front_left_temp;
+float distance_ball_front_right_temp;
+
+int distance_ball_front_counter_left;
+int distance_ball_front_counter_right;
 
 short line_sensor_state;
 byte FL;
@@ -70,8 +73,8 @@ void distance_calculator() {
 
     distance_robot_front = 27.534 * pow(voltage_robot_front, -1.207); //to recalibrate as it is new sensor
     distance_robot_rear = pow(2.718281828, 2.507) * pow(voltage_robot_rear , -1.123);
-    distance_ball_front_left = 27.534 * pow(voltage_ball_front_left , -1.207);
-    distance_ball_front_right = 27.534 * pow(voltage_ball_front_right , -1.207);
+    distance_ball_front_left_temp = 27.534 * pow(voltage_ball_front_left , -1.207);
+    distance_ball_front_right_temp = 27.534 * pow(voltage_ball_front_right , -1.207);
     
     //distance_ball_front_temp = 27.534 * pow(voltage_ball_front , -1.207);
     // distance_ball_front = 27.534 * pow(voltage_ball_front , -1.207);
@@ -82,14 +85,24 @@ void distance_calculator() {
     // if (distance_long2 > 50) {distance_long2 = 50;}
     
     // added this section for far distance rejection
-    // if (distance_ball_front_temp <= ROBOT_BALL_DISTANCE_THRESHOLD) {distance_ball_front_counter++;}
-    // else {distance_ball_front_counter = 1;}
+    if (distance_ball_front_left_temp <= ROBOT_BALL_DISTANCE_THRESHOLD) {distance_ball_front_counter_left++;}
+    else {distance_ball_front_counter_left = 1;}
 
-    // if (distance_ball_front_counter >= FRONT_DIST_CORRECT_VALUE){
-    //     distance_ball_front = distance_ball_front_temp;
-    // }
-    // else{distance_ball_front = ROBOT_BALL_DISTANCE_THRESHOLD + 10;}
-    sleep(100);
+    if (distance_ball_front_counter_left >= FRONT_DIST_CORRECT_VALUE){
+        distance_ball_front_left = distance_ball_front_left_temp;
+    }
+    else{distance_ball_front_left = ROBOT_BALL_DISTANCE_THRESHOLD + 100;}
+
+    if (distance_ball_front_right_temp <= ROBOT_BALL_DISTANCE_THRESHOLD) {distance_ball_front_counter_right++;}
+    else {distance_ball_front_counter_right = 1;}
+
+    if (distance_ball_front_counter_right >= FRONT_DIST_CORRECT_VALUE){
+        distance_ball_front_right = distance_ball_front_right_temp;
+    }
+    else{distance_ball_front_right = ROBOT_BALL_DISTANCE_THRESHOLD + 100;}
+    
+
+    sleep(50);
 }
 
 void get_line_sensor_state() {

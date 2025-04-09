@@ -46,6 +46,7 @@ task action() {
 		//add in all possible combinations of sensor values and robot state values to determine corresponding robot action
 		switch(robot_state) {
 			case BALL_SEARCH_FIRST_BALL:
+				writeDebugStreamLine("BALL_SEARCH_FIRST_BALL");
 				executed_robot_state = BALL_SEARCH_FIRST_BALL;
 				// motor [ball_in_motor] = 0;
 				turn(-1, DEFAULT_MOTOR_TURNING_SPEED);
@@ -53,6 +54,7 @@ task action() {
 				break;
 
 			case BALL_SEARCH_NO_ROBOT:
+				writeDebugStreamLine("BALL_SEARCH_NO_ROBOT");
 				ball_search_first_ball = false;
 				executed_robot_state = BALL_SEARCH_NO_ROBOT;
 				// motor [ball_in_motor] = 0;
@@ -61,6 +63,7 @@ task action() {
 				break;
 
 			case BALL_DETECTED: //drive towards ball
+				writeDebugStreamLine("BALL_DETECTED");
 				ball_search_first_ball = false;
 				executed_robot_state = BALL_DETECTED;
 				/*
@@ -71,7 +74,20 @@ task action() {
 					stop_movement();}*/
 
 				motor [ball_in_motor] = -DEFAULT_BALL_MOTOR_SPEED;
-				drive(1, DEFAULT_MOTOR_DRIVING_SPEED);
+				// only right side detected
+				if (distance_ball_front_right < ROBOT_BALL_DISTANCE_THRESHOLD && distance_ball_front_left > ROBOT_BALL_DISTANCE_THRESHOLD){
+					drive_left(1,DEFAULT_MOTOR_DRIVING_SPEED);
+					writeDebugStreamLine("Veer Left");
+				} // only left side detected
+				else if  (distance_ball_front_right > ROBOT_BALL_DISTANCE_THRESHOLD && distance_ball_front_left < ROBOT_BALL_DISTANCE_THRESHOLD){
+					drive_right(1,DEFAULT_MOTOR_DRIVING_SPEED);
+					writeDebugStreamLine("Veer Right");
+				}
+				else {
+					drive(1, DEFAULT_MOTOR_DRIVING_SPEED);
+					writeDebugStreamLine("Straight");
+				}
+	
 				// collect_ball();
 				previous_executed_robot_state = BALL_DETECTED;
 				break;
@@ -84,6 +100,7 @@ task action() {
 			// 	break;
 
 			case HOME: //both bumper switches pressed, ball in robot and not back robot, orientation NORTH means deposit ball
+				writeDebugStreamLine("HOME");
 				ball_search_first_ball = false;
 				executed_robot_state = HOME;
 				stop_movement();
@@ -97,6 +114,7 @@ task action() {
 				break;
 
 			case BALL_COLLECTED_NO_ROBOT: //robot collected ball and no nearby robots
+				writeDebugStreamLine("BALL_COLLECTED_NO_ROBOT");
 				ball_search_first_ball = false;
 				if (previous_executed_robot_state != BALL_COLLECTED_NO_ROBOT){ //only stop when the prev executed robot state is not the same
 					motor [ball_in_motor] = 0;
@@ -112,6 +130,7 @@ task action() {
 				break;
 
 			case ROBOT_FRONT_DETECTED_BALL_IN: //robot collected ball but robot in front, reverse away first
+				writeDebugStreamLine("ROBOT_FRONT_DETECTED_BALL_IN");
 				ball_search_first_ball = false;
 				executed_robot_state = ROBOT_FRONT_DETECTED_BALL_IN;
 				ball_collected = true;
@@ -121,6 +140,7 @@ task action() {
 				break;
 
 			case ROBOT_FRONT_DETECTED_BALL_OUT: //robot finding ball but robot in front, reverse slightly and turn 20 degrees
+				writeDebugStreamLine("ROBOT_FRONT_DETECTED_BALL_OUT");
 				ball_search_first_ball = false;
 				executed_robot_state = ROBOT_FRONT_DETECTED_BALL_OUT;
 				//motor [ball_in_motor] = 0;
@@ -131,6 +151,7 @@ task action() {
 				break;
 
 			case ROBOT_REAR_DETECTED_BALL_IN: //robot collected ball but robot behind, move foward first, turn 90 degrees, move back a bit
+				writeDebugStreamLine("ROBOT_REAR_DETECTED_BALL_IN");	
 				ball_search_first_ball = false;
 				executed_robot_state = ROBOT_REAR_DETECTED_BALL_IN;
 				ball_collected = true;
@@ -142,12 +163,14 @@ task action() {
 				break;
 
 			case LINE_SENSOR_DETECTED_BALL_COLLECTED:
+				writeDebugStreamLine("LINE_SENSOR_DETECTED_BALL_COLLECTED");
 				ball_search_first_ball = false;
 				executed_robot_state = LINE_SENSOR_DETECTED_BALL_COLLECTED;
 				react_to_line_sensors_homing();
 				previous_executed_robot_state = LINE_SENSOR_DETECTED_BALL_COLLECTED;
 
 			case LINE_SENSOR_DETECTED_BALL_DETECTED_COLLECT_BALL:
+				writeDebugStreamLine("LINE_SENSOR_DETECTED_BALL_DETECTED_COLLECT_BALL");
 				ball_search_first_ball = false;
 				executed_robot_state = LINE_SENSOR_DETECTED_BALL_DETECTED_COLLECT_BALL;
 				react_to_line_sensors_collect_ball();
@@ -155,6 +178,7 @@ task action() {
 				break;
 
 			case LINE_SENSOR_DETECTED:
+				writeDebugStreamLine("LINE_SENSOR_DETECTED");
 				ball_search_first_ball = false;
 				executed_robot_state = LINE_SENSOR_DETECTED;
 				react_to_line_sensors();
@@ -162,6 +186,7 @@ task action() {
 				break;
 
 			default:
+				writeDebugStreamLine("default");
 				ball_search_first_ball = false;
 				motor [ball_in_motor] = 0;
 				stop_movement();

@@ -32,7 +32,7 @@ void react_to_line_sensors() {
         case 4: // BL
             //drive forward and turn right to align with nearest orientation
             stop_movement();
-            drive_distance_fixed(1, 15);
+            drive_distance_fixed(1, 10);
             // turn(-1,DEFAULT_MOTOR_TURNING_SPEED);
             // sleep(DEFAULT_LINE_SENSOR_SLEEP);
             reorientate_R();
@@ -52,7 +52,7 @@ void react_to_line_sensors() {
         case 8: // BR
             //drive forward and turn left to align with nearest orientation
             stop_movement();
-            drive_distance_fixed(1, 15);
+            drive_distance_fixed(1, 10);
             // turn(1,DEFAULT_MOTOR_TURNING_SPEED);
             // sleep(DEFAULT_LINE_SENSOR_SLEEP);
             //reorientate_L();
@@ -105,7 +105,7 @@ void react_to_line_sensors_collect_ball() {
     switch (line_sensor_state) {
         case 1: // FL
             if (boundary_ball_count < MAX_BOUNDARY_BALL_TRIES ) {
-                drive_distance_fixed(1, 10);
+                drive_distance_fixed(1, 15);
                 drive_distance_fixed(-1, 30);
                 boundary_ball_count++;
             } else {
@@ -119,7 +119,7 @@ void react_to_line_sensors_collect_ball() {
         // case 7: // FL | FR | BL
         // case 11: // FL | FR | BR
             if (boundary_ball_count < MAX_BOUNDARY_BALL_TRIES ) {
-                drive_distance_fixed(1, 10);
+                drive_distance_fixed(1, 15);
                 drive_distance_fixed(-1, 30);
                 boundary_ball_count++;
             } else {
@@ -137,9 +137,14 @@ void react_to_line_sensors_collect_ball() {
             if (robot_orientation == SOUTH) {
                 drive_distance_fixed(-1, 30);
                 turn_to_north();
-            } else {
-                drive_distance_fixed(1, 10);
+            } else if (boundary_ball_count < MAX_BOUNDARY_BALL_TRIES){
+                drive_distance_fixed(1, 15);
                 drive_distance_fixed(-1, 30);
+                boundary_ball_count++;
+            } else {
+                boundary_ball_count = 0;
+                drive_distance_fixed(-1, 30);
+                turn_90_degrees_L();
             }
             break;
             
