@@ -1,19 +1,22 @@
 const short DEFAULT_MOTOR_DRIVING_SPEED = 40;
 const short SLOW_MOTOR_DRIVING_SPEED = 20;
-const short DEFAULT_MOTOR_TURNING_SPEED = 35;
+const short DEFAULT_MOTOR_TURNING_SPEED = 30;
 const short DEFAULT_BALL_MOTOR_SPEED = 127;
 const short MS_PER_DEGREE = 8; //line sensors turning //NOT USED
-const short DEFAULT_MOTOR_TURNING_NORTH_SPEED = 70;
-const short DEFAULT_MOTOR_HOME_DRIVING_SPEED = 60;
+const short DEFAULT_MOTOR_TURNING_NORTH_SPEED = 60;
+const short DEFAULT_MOTOR_HOME_DRIVING_SPEED = 80;
 const short DEFAULT_MOTOR_START_DRIVING_SPEED = 127;
+const float LEFT_MOTOR_OFFSET_STRAIGHT = 0.6; //ensure robots drives straight
+const float RIGHT_MOTOR_OFFSET_TURNING = 1.5; //ensures both motors spin when driving
+const float VEERING_OFFSET = 1.75;
 
 const short START_MOVE_FIELD_DISTANCE = 150;
 const short END_MOVE_FIELD_DISTANCE = 120;
 
-const short START_MOVE_FIELD_TIME = 1800;
-const short END_MOVE_FIELD_TIME = 1800;
+const short START_MOVE_FIELD_TIME = 2000;
+const short END_MOVE_FIELD_TIME = 2000;
 const short TIME_TO_TRAVEL_10_CM = 350;
-const short TIME_TO_TRAVEL_15_CM = 500;
+const short TIME_TO_TRAVEL_15_CM = 900;
 const short TIME_TO_TRAVEL_30_CM = 900;
 const short TIME_TO_TRAVEL_60_CM = 2200;
 const short DEFAULT_LINE_SENSOR_SLEEP = 100; //NOT USED
@@ -32,8 +35,8 @@ const short ROBOT_BALL_REJECTION_SHORT_DISTANCE_THRESHOLD = 30; //NOT USED
 const short ROBOT_SENSOR_DIFF_THRESHOLD = 9;
 
 
-const short ROBOT_STATE_CORRECT_VALUE = 10;
-const short FRONT_DIST_CORRECT_VALUE = 1;
+const short ROBOT_STATE_CORRECT_VALUE = 3;
+const short FRONT_DIST_CORRECT_VALUE = 3;
 
 const short MAX_BOUNDARY_BALL_TRIES = 3;
 
