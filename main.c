@@ -1,6 +1,6 @@
-#pragma config(Sensor, in2,    dist_robot_front, sensorAnalog)
+#pragma config(Sensor, in2,    dist_ball_front_center, sensorAnalog)
 #pragma config(Sensor, in3,    dist_ball_front_right, sensorAnalog)
-#pragma config(Sensor, in6,    dist_robot_rear, sensorAnalog)
+#pragma config(Sensor, in6,    dist_robot_front, sensorAnalog)
 #pragma config(Sensor, in8,    dist_ball_front_left, sensorAnalog)
 #pragma config(Sensor, dgtl1,  compass_west,   sensorDigitalIn)
 #pragma config(Sensor, dgtl2,  compass_south,  sensorDigitalIn)
@@ -74,20 +74,20 @@ task action() {
 					stop_movement();}*/
 
 				motor [ball_in_motor] = -DEFAULT_BALL_MOTOR_SPEED;
-				// only right side detected
-				if (distance_ball_front_right < ROBOT_BALL_DISTANCE_THRESHOLD && distance_ball_front_left > ROBOT_BALL_DISTANCE_THRESHOLD){
+				// only right side detected and left and center not detected
+				if (distance_ball_front_right < ROBOT_BALL_DISTANCE_THRESHOLD && distance_ball_front_left > ROBOT_BALL_DISTANCE_THRESHOLD && distance_ball_front_center > ROBOT_BALL_DISTANCE_THRESHOLD){
 					drive_left(1,DEFAULT_MOTOR_DRIVING_SPEED);
 					writeDebugStreamLine("Veer Left");
-				} // only left side detected
-				else if  (distance_ball_front_right > ROBOT_BALL_DISTANCE_THRESHOLD && distance_ball_front_left < ROBOT_BALL_DISTANCE_THRESHOLD){
+				} // only left side detected and right and center not detected
+				else if  (distance_ball_front_right > ROBOT_BALL_DISTANCE_THRESHOLD && distance_ball_front_left < ROBOT_BALL_DISTANCE_THRESHOLD && distance_ball_front_center > ROBOT_BALL_DISTANCE_THRESHOLD){
 					drive_right(1,DEFAULT_MOTOR_DRIVING_SPEED);
 					writeDebugStreamLine("Veer Right");
 				}
-				else {
+				else { 
 					drive(1, DEFAULT_MOTOR_DRIVING_SPEED);
 					writeDebugStreamLine("Straight");
 				}
-	
+
 				// collect_ball();
 				previous_executed_robot_state = BALL_DETECTED;
 				break;
@@ -116,15 +116,23 @@ task action() {
 			case BALL_COLLECTED_NO_ROBOT: //robot collected ball and no nearby robots
 				writeDebugStreamLine("BALL_COLLECTED_NO_ROBOT");
 				ball_search_first_ball = false;
+				if ( !ball_collected) {
+					motor [ball_out_motor] = -DEFAULT_BALL_MOTOR_SPEED;
+					sleep(TIME_TO_LOCK_BALL) //lock the collected ball in place
+					motor [ball_out_motor] = 0; 
+					motor [ball_in_motor] = DEFAULT_BALL_MOTOR_SPEED; //spin the ball in motor in the opp direction to kick out nay extra balls
+				} 
+				/*
 				if (previous_executed_robot_state != BALL_COLLECTED_NO_ROBOT){ //only stop when the prev executed robot state is not the same
 					motor [ball_in_motor] = 0;
 					stop_movement();
-				}
+				} */
 				executed_robot_state = BALL_COLLECTED_NO_ROBOT;
 				ball_collected = true;
 				is_turning = true;
 				turn_to_north_home();
 				is_turning = false;
+				motor [ball_in_motor] = 0;
 				if (executed_robot_state == robot_state) {drive(-1, DEFAULT_MOTOR_HOME_DRIVING_SPEED);}
 				previous_executed_robot_state = BALL_COLLECTED_NO_ROBOT;
 				break;
@@ -151,7 +159,7 @@ task action() {
 				break;
 
 			case ROBOT_REAR_DETECTED_BALL_IN: //robot collected ball but robot behind, move foward first, turn 90 degrees, move back a bit
-				writeDebugStreamLine("ROBOT_REAR_DETECTED_BALL_IN");	
+				writeDebugStreamLine("ROBOT_REAR_DETECTED_BALL_IN");
 				ball_search_first_ball = false;
 				executed_robot_state = ROBOT_REAR_DETECTED_BALL_IN;
 				ball_collected = true;

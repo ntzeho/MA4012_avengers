@@ -40,4 +40,5 @@ const short FRONT_DIST_CORRECT_VALUE = 3;
 
 const short MAX_BOUNDARY_BALL_TRIES = 3;
 
-const short HOMING_BOTH_SIDES_CHECK_TIME = 250;
+const short HOMING_BOTH_SIDES_CHECK_TIME = 500;
+const short TIME_TO_LOCK_BALL = 100;
