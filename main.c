@@ -26,6 +26,7 @@ short boundary_ball_count = 0; //number of tries to pick up ball at boundary
 char start_position = 'R';   //starting position of robot, default at right side
 bool ball_collected = false; //true when ball is collected
 short robot_home_turn_to_north = 0; //no of times robot has made the turn to north
+short robot_rear_detected_count = 0; //no of times robot has detected rear robot when returning to base
 bool ball_search_first_ball = true; //false when first ball search has been done once
 
 //-----debugging variables
@@ -177,12 +178,16 @@ task action() {
 
 			case ROBOT_REAR_DETECTED_BALL_IN: //robot collected ball but robot behind, move foward first, turn 90 degrees, move back a bit
 				writeDebugStreamLine("ROBOT_REAR_DETECTED_BALL_IN");
-				reset_impt_variables();
+				reset_impt_variables(false);
 				executed_robot_state = ROBOT_REAR_DETECTED_BALL_IN;
 				ball_collected = true;
 				//TODO ADD CODE HERE
 				drive_distance_fixed(1, 30);
-				turn_angle(1, 45);
+
+				if (robot_rear_detected_count % 2 == 0) {turn_angle(1, 45);}
+				else {turn_angle(-1, 45);}
+				robot_rear_detected_count++;
+
 				drive_distance(1, 60);
 				//end of added code
 				previous_executed_robot_state = ROBOT_REAR_DETECTED_BALL_IN;
