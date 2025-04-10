@@ -123,7 +123,7 @@ task action() {
 				executed_robot_state = BALL_COLLECTED_NO_ROBOT;
 				ball_collected = true;
 				is_turning = true;
-				turn_to_north();
+				turn_to_north_home();
 				is_turning = false;
 				if (executed_robot_state == robot_state) {drive(-1, DEFAULT_MOTOR_HOME_DRIVING_SPEED);}
 				previous_executed_robot_state = BALL_COLLECTED_NO_ROBOT;

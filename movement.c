@@ -93,7 +93,7 @@ void drive_distance_fixed(short direction, short distance) {
     stop_movement();
 }
 
-void turn_to_north() {
+void turn_to_north_home() {
     switch (robot_orientation) {
         case NORTH:
             break;
@@ -114,6 +114,34 @@ void turn_to_north() {
         case WEST:
         case NORTHWEST:
             turn(1, DEFAULT_MOTOR_TURNING_NORTH_SPEED);
+            // while (robot_orientation != NORTH && executed_robot_state == robot_state && !line_sensor_state_check()) {}
+            while (robot_orientation != NORTH && ((executed_robot_state == robot_state && !line_sensor_state_check()) || line_sensor_state_check())) {}
+            // stop_movement(); //remove this for smooth movement
+            break;
+    }
+}
+
+void turn_to_north() {
+    switch (robot_orientation) {
+        case NORTH:
+            break;
+        
+        //turn left
+        case NORTHEAST:
+        case EAST:
+        case SOUTHEAST:
+        case SOUTH:
+            turn(-1, DEFAULT_MOTOR_TURNING_SPEED);
+            // while (robot_orientation != NORTH && executed_robot_state == robot_state && !line_sensor_state_check()) {}
+            while (robot_orientation != NORTH && ((executed_robot_state == robot_state && !line_sensor_state_check()) || line_sensor_state_check())) {}
+            // stop_movement(); // remove this for smooth movement
+            break;
+
+        //turn right
+        case SOUTHWEST:
+        case WEST:
+        case NORTHWEST:
+            turn(1, DEFAULT_MOTOR_TURNING_SPEED);
             // while (robot_orientation != NORTH && executed_robot_state == robot_state && !line_sensor_state_check()) {}
             while (robot_orientation != NORTH && ((executed_robot_state == robot_state && !line_sensor_state_check()) || line_sensor_state_check())) {}
             // stop_movement(); //remove this for smooth movement
@@ -387,11 +415,11 @@ void deposit_ball() {
 }
 
 void ball_scanning() {
-    drive_distance(1, 60);
     if(executed_robot_state == robot_state) {
         is_turning_360 = true;
         turn_360_degrees();
     }
+    drive_distance(1, 60);
     // stop_movement();
     is_turning_360 = false;
 }
