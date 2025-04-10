@@ -425,3 +425,13 @@ void ball_scanning() {
     // stop_movement();
     is_turning_360 = false;
 }
+
+void turn_360_degrees_with_pause() {
+    for (short i = 1; i <= 8; ++i) {
+        turn(-1, FAST_MOTOR_TURNING_SPEED);
+        sleep(TURNING_TIME);
+        motor [left_motor] = 0;
+        motor [right_motor] = 0;
+        sleep_with_state_detection(DETECTION_TIME);
+    }
+}

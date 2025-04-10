@@ -44,8 +44,26 @@ bool is_turning_360 = false;
 void wait_for_on();
 
 void reset_impt_variables() {
-	ball_search_first_ball = false;
-	robot_home_turn_to_north = 0;
+	switch(robot_state){
+		case BALL_SEARCH_FIRST_BALL:
+			break;
+		
+		case BALL_COLLECTED_NO_ROBOT:
+			ball_search_first_ball = false;
+			boundary_ball_count = 0;
+			break;
+		
+		case LINE_SENSOR_DETECTED_BALL_DETECTED_COLLECT_BALL:
+			ball_search_first_ball = false;
+			robot_home_turn_to_north = 0;
+			break;
+
+		default:
+			ball_search_first_ball = false;
+			robot_home_turn_to_north = 0;
+			boundary_ball_count = 0;
+	}
+
 }
 
 task action() {
@@ -122,7 +140,7 @@ task action() {
 
 			case BALL_COLLECTED_NO_ROBOT: //robot collected ball and no nearby robots
 				writeDebugStreamLine("BALL_COLLECTED_NO_ROBOT");
-				ball_search_first_ball = false;
+				reset_impt_variables();
 				if (!ball_collected) {
 					motor [ball_out_motor] = -DEFAULT_BALL_MOTOR_SPEED;
 					sleep(TIME_TO_LOCK_BALL); //lock the collected ball in place
@@ -178,7 +196,7 @@ task action() {
 
 			case ROBOT_REAR_DETECTED_BALL_IN: //robot collected ball but robot behind, move foward first, turn 90 degrees, move back a bit
 				writeDebugStreamLine("ROBOT_REAR_DETECTED_BALL_IN");
-				reset_impt_variables(false);
+				reset_impt_variables();
 				executed_robot_state = ROBOT_REAR_DETECTED_BALL_IN;
 				ball_collected = true;
 				//TODO ADD CODE HERE

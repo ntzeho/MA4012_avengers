@@ -51,3 +51,7 @@ const short MAX_BOUNDARY_BALL_TRIES = 3;
 const short HOMING_BOTH_SIDES_CHECK_TIME = 500;
 const short TIME_TO_LOCK_BALL = 100;
 const short ROBOT_REAR_DETECTED_TIMER = 15000;
+
+const short FAST_MOTOR_TURNING_SPEED = 60;
+const short TURNING_TIME = 250;
+const short DETECTION_TIME = 500;
