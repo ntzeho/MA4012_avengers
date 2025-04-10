@@ -25,6 +25,7 @@ short ball_count = 0;        //number of balls collected by robot
 short boundary_ball_count = 0; //number of tries to pick up ball at boundary
 char start_position = 'R';   //starting position of robot, default at right side
 bool ball_collected = false; //true when ball is collected
+short robot_home_turn_to_north = 0; //no of times robot has made the turn to north
 bool ball_search_first_ball = true; //false when first ball search has been done once
 
 //-----debugging variables
@@ -41,6 +42,11 @@ bool is_turning_360 = false;
 
 void wait_for_on();
 
+void reset_impt_variables() {
+	ball_search_first_ball = false;
+	robot_home_turn_to_north = 0;
+}
+
 task action() {
 	while (true) {
 		//add in all possible combinations of sensor values and robot state values to determine corresponding robot action
@@ -55,7 +61,7 @@ task action() {
 
 			case BALL_SEARCH_NO_ROBOT:
 				writeDebugStreamLine("BALL_SEARCH_NO_ROBOT");
-				ball_search_first_ball = false;
+				reset_impt_variables();
 				executed_robot_state = BALL_SEARCH_NO_ROBOT;
 				// motor [ball_in_motor] = 0;
 				ball_scanning();
@@ -64,7 +70,7 @@ task action() {
 
 			case BALL_DETECTED: //drive towards ball
 				writeDebugStreamLine("BALL_DETECTED");
-				ball_search_first_ball = false;
+				reset_impt_variables();
 				executed_robot_state = BALL_DETECTED;
 				/*
 				if (previous_executed_robot_state != robot_state){
@@ -83,7 +89,7 @@ task action() {
 					drive_right(1,DEFAULT_MOTOR_DRIVING_SPEED);
 					writeDebugStreamLine("Veer Right");
 				}
-				else { 
+				else {
 					drive(1, DEFAULT_MOTOR_DRIVING_SPEED);
 					writeDebugStreamLine("Straight");
 				}
@@ -101,7 +107,7 @@ task action() {
 
 			case HOME: //both bumper switches pressed, ball in robot and not back robot, orientation NORTH means deposit ball
 				writeDebugStreamLine("HOME");
-				ball_search_first_ball = false;
+				reset_impt_variables();
 				executed_robot_state = HOME;
 				stop_movement();
 				deposit_ball();
@@ -116,12 +122,12 @@ task action() {
 			case BALL_COLLECTED_NO_ROBOT: //robot collected ball and no nearby robots
 				writeDebugStreamLine("BALL_COLLECTED_NO_ROBOT");
 				ball_search_first_ball = false;
-				if ( !ball_collected) {
+				if (!ball_collected) {
 					motor [ball_out_motor] = -DEFAULT_BALL_MOTOR_SPEED;
-					sleep(TIME_TO_LOCK_BALL) //lock the collected ball in place
-					motor [ball_out_motor] = 0; 
+					sleep(TIME_TO_LOCK_BALL); //lock the collected ball in place
+					motor [ball_out_motor] = 0;
 					motor [ball_in_motor] = DEFAULT_BALL_MOTOR_SPEED; //spin the ball in motor in the opp direction to kick out nay extra balls
-				} 
+				}
 				/*
 				if (previous_executed_robot_state != BALL_COLLECTED_NO_ROBOT){ //only stop when the prev executed robot state is not the same
 					motor [ball_in_motor] = 0;
@@ -129,9 +135,20 @@ task action() {
 				} */
 				executed_robot_state = BALL_COLLECTED_NO_ROBOT;
 				ball_collected = true;
-				is_turning = true;
-				turn_to_north_home();
-				is_turning = false;
+
+				switch (robot_home_turn_to_north) {
+					case 0:
+						clearTimer(T3); //clear timer ready to measure time taken to reach home
+
+					case 1: //adjust orientation only when robot has only turned 0 or 1 times previously
+						is_turning = true;
+						turn_to_north_home();
+						is_turning = false;
+
+					default:
+						break;
+				}
+
 				motor [ball_in_motor] = 0;
 				if (executed_robot_state == robot_state) {drive(-1, DEFAULT_MOTOR_HOME_DRIVING_SPEED);}
 				previous_executed_robot_state = BALL_COLLECTED_NO_ROBOT;
@@ -139,7 +156,7 @@ task action() {
 
 			case ROBOT_FRONT_DETECTED_BALL_IN: //robot collected ball but robot in front, reverse away first
 				writeDebugStreamLine("ROBOT_FRONT_DETECTED_BALL_IN");
-				ball_search_first_ball = false;
+				reset_impt_variables();
 				executed_robot_state = ROBOT_FRONT_DETECTED_BALL_IN;
 				ball_collected = true;
 				motor [ball_in_motor] = 0;
@@ -149,7 +166,7 @@ task action() {
 
 			case ROBOT_FRONT_DETECTED_BALL_OUT: //robot finding ball but robot in front, reverse slightly and turn 20 degrees
 				writeDebugStreamLine("ROBOT_FRONT_DETECTED_BALL_OUT");
-				ball_search_first_ball = false;
+				reset_impt_variables();
 				executed_robot_state = ROBOT_FRONT_DETECTED_BALL_OUT;
 				//motor [ball_in_motor] = 0;
 				//TODO ADD CODE HERE
@@ -160,26 +177,28 @@ task action() {
 
 			case ROBOT_REAR_DETECTED_BALL_IN: //robot collected ball but robot behind, move foward first, turn 90 degrees, move back a bit
 				writeDebugStreamLine("ROBOT_REAR_DETECTED_BALL_IN");
-				ball_search_first_ball = false;
+				reset_impt_variables();
 				executed_robot_state = ROBOT_REAR_DETECTED_BALL_IN;
 				ball_collected = true;
-				motor [ball_in_motor] = 0;
 				//TODO ADD CODE HERE
-				drive_distance(1, 30);
+				drive_distance_fixed(1, 30);
+				turn_angle(1, 45);
+				drive_distance(1, 60);
 				//end of added code
 				previous_executed_robot_state = ROBOT_REAR_DETECTED_BALL_IN;
+				clearTimer(T3);
 				break;
 
 			case LINE_SENSOR_DETECTED_BALL_COLLECTED:
 				writeDebugStreamLine("LINE_SENSOR_DETECTED_BALL_COLLECTED");
-				ball_search_first_ball = false;
+				reset_impt_variables();
 				executed_robot_state = LINE_SENSOR_DETECTED_BALL_COLLECTED;
 				react_to_line_sensors_homing();
 				previous_executed_robot_state = LINE_SENSOR_DETECTED_BALL_COLLECTED;
 
 			case LINE_SENSOR_DETECTED_BALL_DETECTED_COLLECT_BALL:
 				writeDebugStreamLine("LINE_SENSOR_DETECTED_BALL_DETECTED_COLLECT_BALL");
-				ball_search_first_ball = false;
+				reset_impt_variables();
 				executed_robot_state = LINE_SENSOR_DETECTED_BALL_DETECTED_COLLECT_BALL;
 				react_to_line_sensors_collect_ball();
 				previous_executed_robot_state = LINE_SENSOR_DETECTED_BALL_DETECTED_COLLECT_BALL;
@@ -187,7 +206,7 @@ task action() {
 
 			case LINE_SENSOR_DETECTED:
 				writeDebugStreamLine("LINE_SENSOR_DETECTED");
-				ball_search_first_ball = false;
+				reset_impt_variables();
 				executed_robot_state = LINE_SENSOR_DETECTED;
 				react_to_line_sensors();
 				previous_executed_robot_state = LINE_SENSOR_DETECTED;
@@ -195,7 +214,7 @@ task action() {
 
 			default:
 				writeDebugStreamLine("default");
-				ball_search_first_ball = false;
+				reset_impt_variables();
 				motor [ball_in_motor] = 0;
 				stop_movement();
 				break;

@@ -94,6 +94,7 @@ void drive_distance_fixed(short direction, short distance) {
 }
 
 void turn_to_north_home() {
+    robot_home_turn_to_north++;
     switch (robot_orientation) {
         case NORTH:
             break;
@@ -365,7 +366,8 @@ void turn_angle(short direction, short angle) {
             break;
 
         case 45:
-            sleep_with_state_detection(ROTATE_45_DEGREES_SLEEP);
+            sleep(ROTATE_45_DEGREES_SLEEP);
+            //sleep_with_state_detection(ROTATE_45_DEGREES_SLEEP);
             break;
     }
     
