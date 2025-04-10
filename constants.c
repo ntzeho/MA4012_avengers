@@ -19,7 +19,6 @@ const short TIME_TO_TRAVEL_10_CM = 350;
 const short TIME_TO_TRAVEL_15_CM = 900;
 const short TIME_TO_TRAVEL_30_CM = 900;
 const short TIME_TO_TRAVEL_60_CM = 2200;
-const short DEFAULT_LINE_SENSOR_SLEEP = 100; //NOT USED
 
 const short ROTATE_20_DEGREES_SLEEP = 200;
 const short ROTATE_45_DEGREES_SLEEP = 450;
