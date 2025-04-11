@@ -107,7 +107,6 @@ void turn_to_north_home() {
             break;
         
         //turn left
-        case NORTHEAST:
         case EAST:
         case SOUTHEAST:
         case SOUTH:
@@ -117,11 +116,24 @@ void turn_to_north_home() {
             // stop_movement(); // remove this for smooth movement
             break;
 
+        case NORTHEAST:
+            turn(-1, DEFAULT_SLOW_MOTOR_TURNING_NORTH_SPEED);
+            // while (robot_orientation != NORTH && executed_robot_state == robot_state && !line_sensor_state_check()) {}
+            while (robot_orientation != NORTH && ((executed_robot_state == robot_state && !line_sensor_state_check()) || line_sensor_state_check())) {}
+            // stop_movement(); // remove this for smooth movement
+            break;
+
         //turn right
         case SOUTHWEST:
         case WEST:
-        case NORTHWEST:
             turn(1, DEFAULT_MOTOR_TURNING_NORTH_SPEED);
+            // while (robot_orientation != NORTH && executed_robot_state == robot_state && !line_sensor_state_check()) {}
+            while (robot_orientation != NORTH && ((executed_robot_state == robot_state && !line_sensor_state_check()) || line_sensor_state_check())) {}
+            // stop_movement(); //remove this for smooth movement
+            break;
+
+        case NORTHWEST:
+            turn(1, DEFAULT_SLOW_MOTOR_TURNING_NORTH_SPEED);
             // while (robot_orientation != NORTH && executed_robot_state == robot_state && !line_sensor_state_check()) {}
             while (robot_orientation != NORTH && ((executed_robot_state == robot_state && !line_sensor_state_check()) || line_sensor_state_check())) {}
             // stop_movement(); //remove this for smooth movement
