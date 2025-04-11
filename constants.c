@@ -3,13 +3,13 @@ const short SLOW_MOTOR_DRIVING_SPEED = 20;
 const short DEFAULT_MOTOR_TURNING_SPEED = 30;
 const short DEFAULT_BALL_MOTOR_SPEED = 127;
 const short MS_PER_DEGREE = 8; //line sensors turning //NOT USED
-const short DEFAULT_MOTOR_TURNING_NORTH_SPEED = 60;
-const short DEFAULT_SLOW_MOTOR_TURNING_NORTH_SPEED = 40;
-const short DEFAULT_MOTOR_HOME_DRIVING_SPEED = 80;
+const short DEFAULT_MOTOR_TURNING_NORTH_SPEED = 50;
+const short DEFAULT_SLOW_MOTOR_TURNING_NORTH_SPEED = 25;
+const short DEFAULT_MOTOR_HOME_DRIVING_SPEED = 100;
 const short DEFAULT_MOTOR_START_DRIVING_SPEED = 127;
 const float LEFT_MOTOR_OFFSET_STRAIGHT = 0.6; //ensure robots drives straight
 const float RIGHT_MOTOR_OFFSET_TURNING = 1.5; //ensures both motors spin when driving
-const float VEERING_OFFSET = 1.75;
+const float VEERING_OFFSET = 1.75; //greater than 1 means veer more
 
 const short START_MOVE_FIELD_DISTANCE = 150;
 const short END_MOVE_FIELD_DISTANCE = 120;
@@ -50,8 +50,9 @@ const short MAX_BOUNDARY_BALL_TRIES = 3;
 
 const short HOMING_BOTH_SIDES_CHECK_TIME = 500;
 const short TIME_TO_LOCK_BALL = 300;
-const short ROBOT_REAR_DETECTED_TIMER = 15000;
+const short TIME_TO_SPIT_BALL = 750;
+const short ROBOT_REAR_DETECTED_TIMER = 10000;
 
 const short FAST_MOTOR_TURNING_SPEED = 60;
-const short TURNING_TIME = 250;
+const short TURNING_TIME = 100;
 const short DETECTION_TIME = 500;

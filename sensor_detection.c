@@ -75,11 +75,12 @@ void distance_calculator() {
     voltage_ball_front_right = (SensorValue [dist_ball_front_right]) * (5.0 / 4096.0);
     voltage_ball_front_left = (SensorValue [dist_ball_front_left]) * (5.0 / 4096.0);
 
-    distance_ball_front_center_temp = 27.534 * pow(voltage_ball_front_center, -1.207); //to recalibrate as it is new sensor
-    distance_ball_front_left_temp = 27.534 * pow(voltage_ball_front_left , -1.207);
-    distance_ball_front_right_temp = 27.534 * pow(voltage_ball_front_right , -1.207);
+    distance_ball_front_center_temp = pow(2.718281828, 3.091) * pow(voltage_ball_front_center, -0.9937);
+    distance_ball_front_left_temp = pow(2.718281828, 3.094) * pow(voltage_ball_front_left , -1.838);
+    distance_ball_front_right_temp = pow(2.718281828, 3.276) * pow(voltage_ball_front_right , -1.081);
 
     distance_robot_front = pow(2.718281828, 2.507) * pow(voltage_robot_front , -1.123);
+    //27.534 * pow(voltage_ball_front_right , -1.207);
     //distance_ball_front_temp = 27.534 * pow(voltage_ball_front , -1.207);
     // distance_ball_front = 27.534 * pow(voltage_ball_front , -1.207);
     //distance_long2 = 27.194 * pow(voltage_long2, -1.121); //pow(2.718281828, 3.303)

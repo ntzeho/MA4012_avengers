@@ -163,9 +163,10 @@ void react_to_line_sensors_homing() {
         case 12: // BL | BR
         case 13: // FL | BL | BR
         case 14: // FR | BL | BR
-            if (robot_orientation != NORTH){
-                drive_distance_fixed(1, 10);
-            }
+            drive_distance_fixed(1, 10);
+            // if (robot_orientation != NORTH){
+            //     drive_distance_fixed(1, 10);
+            // }
             break;
 
         case 1: // FL

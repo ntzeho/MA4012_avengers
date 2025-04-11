@@ -58,6 +58,7 @@ void reset_impt_variables() {
 		case BALL_DETECTED:
 			ball_search_first_ball = false;
 			robot_home_turn_to_north = 0;
+			clearTimer(T3);
 			break;
 
 		case BALL_SEARCH_NO_ROBOT:
@@ -66,12 +67,14 @@ void reset_impt_variables() {
 			}
 			ball_search_first_ball = false;
 			robot_home_turn_to_north = 0;
-
+			clearTimer(T3);
+			break;
 
 		default:
 			ball_search_first_ball = false;
 			robot_home_turn_to_north = 0;
 			boundary_ball_count = 0;
+			clearTimer(T3);
 	}
 
 }
@@ -90,7 +93,7 @@ task action() {
 
 			case BALL_SEARCH_NO_ROBOT:
 				writeDebugStreamLine("BALL_SEARCH_NO_ROBOT");
-				clearTimer(T4);
+				if (previous_executed_robot_state != BALL_SEARCH_NO_ROBOT) {clearTimer(T4);}
 				reset_impt_variables();
 				executed_robot_state = BALL_SEARCH_NO_ROBOT;
 				// motor [ball_in_motor] = 0;
@@ -112,11 +115,11 @@ task action() {
 
 				motor [ball_in_motor] = -DEFAULT_BALL_MOTOR_SPEED;
 				// only right side detected and left and center not detected
-				if (distance_ball_front_right < ROBOT_BALL_DISTANCE_THRESHOLD && distance_ball_front_left > ROBOT_BALL_DISTANCE_THRESHOLD && distance_ball_front_center > ROBOT_BALL_DISTANCE_THRESHOLD){
+				if (distance_ball_front_right < ROBOT_BALL_DISTANCE_THRESHOLD && distance_ball_front_left > ROBOT_BALL_DISTANCE_THRESHOLD){ //distance_ball_front_center > ROBOT_BALL_DISTANCE_THRESHOLD
 					drive_left(1,DEFAULT_MOTOR_DRIVING_SPEED);
 					writeDebugStreamLine("Veer Left");
 				} // only left side detected and right and center not detected
-				else if  (distance_ball_front_right > ROBOT_BALL_DISTANCE_THRESHOLD && distance_ball_front_left < ROBOT_BALL_DISTANCE_THRESHOLD && distance_ball_front_center > ROBOT_BALL_DISTANCE_THRESHOLD){
+				else if  (distance_ball_front_right > ROBOT_BALL_DISTANCE_THRESHOLD && distance_ball_front_left < ROBOT_BALL_DISTANCE_THRESHOLD){
 					drive_right(1,DEFAULT_MOTOR_DRIVING_SPEED);
 					writeDebugStreamLine("Veer Right");
 				}
@@ -154,9 +157,12 @@ task action() {
 				writeDebugStreamLine("BALL_COLLECTED_NO_ROBOT");
 				reset_impt_variables();
 				if (!ball_collected) {
-					motor [ball_out_motor] = -DEFAULT_BALL_MOTOR_SPEED;
-					sleep(TIME_TO_LOCK_BALL); //lock the collected ball in place
-					motor [ball_out_motor] = 0;
+					// motor [ball_out_motor] = -DEFAULT_BALL_MOTOR_SPEED;
+					// sleep(TIME_TO_LOCK_BALL); //lock the collected ball in place
+					// motor [ball_out_motor] = 0;
+					motor [ball_in_motor] = DEFAULT_BALL_MOTOR_SPEED;
+					sleep(TIME_TO_SPIT_BALL); //lock the collected ball in place
+					motor [ball_in_motor] = 0;
 
 				}
 				/*
@@ -166,24 +172,24 @@ task action() {
 				} */
 				executed_robot_state = BALL_COLLECTED_NO_ROBOT;
 				ball_collected = true;
-
-				switch (robot_home_turn_to_north) {
-					case 0:
-						clearTimer(T3); //clear timer ready to measure time taken to reach home
-
-					case 1: //adjust orientation only when robot has only turned 0 or 1 times previously
-					case 2:
-					case 3:
-					case 4:
-					case 5:
-						is_turning = true;
-						turn_to_north_home();
-						is_turning = false;
-
-					default:
-						break;
+				// motor [ball_in_motor] = DEFAULT_BALL_MOTOR_SPEED; //spin the ball in motor in the opp direction to kick out nay extra balls
+				is_turning = true;
+				turn_to_north_home();
+				is_turning = false;
+				/*
+				if (robot_home_turn_to_north == 0) {
+					clearTimer(T3);
+					is_turning = true;
+					turn_to_north_home();
+					is_turning = false;
 				}
-				motor [ball_in_motor] = DEFAULT_BALL_MOTOR_SPEED; //spin the ball in motor in the opp direction to kick out nay extra balls
+				else if (robot_home_turn_to_north >= 1 && robot_home_turn_to_north <= 5) {
+					is_turning = true;
+					turn_to_north_home();
+					is_turning = false;
+				}
+				*/
+
 				//motor [ball_in_motor] = 0;
 				if (executed_robot_state == robot_state) {drive(-1, DEFAULT_MOTOR_HOME_DRIVING_SPEED);}
 				previous_executed_robot_state = BALL_COLLECTED_NO_ROBOT;
@@ -222,10 +228,9 @@ task action() {
 				else {turn_angle(-1, 45);}
 				robot_rear_detected_count++;
 
-				drive_distance(1, 60);
+				drive_distance_robot_rear();
 				//end of added code
 				previous_executed_robot_state = ROBOT_REAR_DETECTED_BALL_IN;
-				clearTimer(T3);
 				break;
 
 			case LINE_SENSOR_DETECTED_BALL_COLLECTED:

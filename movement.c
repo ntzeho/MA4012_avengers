@@ -22,13 +22,13 @@ void stop_movement() {
 }
 
 void drive_left(short direction, short speed) {
-    motor [left_motor] = -speed * direction;
+    motor [left_motor] = -speed * direction / VEERING_OFFSET;
     motor [right_motor] = speed * VEERING_OFFSET * direction;
 }
 
 void drive_right(short direction, short speed) {
     motor [left_motor] = (-speed * VEERING_OFFSET) * direction;
-    motor [right_motor] = speed * direction;
+    motor [right_motor] = speed * direction / VEERING_OFFSET;
 }
 
 void drive_distance(short direction, short distance) {
@@ -54,6 +54,13 @@ void drive_distance(short direction, short distance) {
             sleep_with_state_detection(START_MOVE_FIELD_TIME);
             break;
     }
+    stop_movement();
+}
+
+void drive_distance_robot_rear() {
+    drive(1, DEFAULT_MOTOR_DRIVING_SPEED);
+    clearTimer(T1);
+    while (robot_state != LINE_SENSOR_DETECTED_BALL_COLLECTED && time1[T1] < TIME_TO_TRAVEL_60_CM) {}
     stop_movement();
 }
 
@@ -356,6 +363,17 @@ void turn_360_degrees() {
     stop_movement();
 }
 
+void turn_360_degrees_with_pause() {
+    short i = 1;
+    while (i <= 8 && executed_robot_state == robot_state) {
+        turn(-1, FAST_MOTOR_TURNING_SPEED);
+        sleep(TURNING_TIME);
+        stop_movement();
+        sleep_with_state_detection(DETECTION_TIME);
+        i++;
+    }
+}
+
 void turn_angle(short direction, short angle) {
     //assuming 1 is forward and -1 is backward:
     //direction = 1 means turn right, direction = -1 means turn left
@@ -382,7 +400,7 @@ void move_field() { //move to just over halfway point to begin searching for bal
         
         case 1:
             drive_distance_fixed(1, START_MOVE_FIELD_DISTANCE);
-            turn_90_degrees_L();
+            //turn_90_degrees_L();
 
             //movement to centre sector with appropriate turning depending on start_position value
             // if (start_position == 'L') {
@@ -419,19 +437,10 @@ void deposit_ball() {
 void ball_scanning() {
     if(executed_robot_state == robot_state) {
         is_turning_360 = true;
-        turn_360_degrees();
+        //turn_360_degrees();
+        turn_360_degrees_with_pause();
     }
     drive_distance(1, 60);
     // stop_movement();
     is_turning_360 = false;
-}
-
-void turn_360_degrees_with_pause() {
-    for (short i = 1; i <= 8; ++i) {
-        turn(-1, FAST_MOTOR_TURNING_SPEED);
-        sleep(TURNING_TIME);
-        motor [left_motor] = 0;
-        motor [right_motor] = 0;
-        sleep_with_state_detection(DETECTION_TIME);
-    }
 }
