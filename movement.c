@@ -22,13 +22,13 @@ void stop_movement() {
 }
 
 void drive_left(short direction, short speed) {
-    motor [left_motor] = -speed * direction / VEERING_OFFSET;
+    motor [left_motor] = -speed * direction;
     motor [right_motor] = speed * VEERING_OFFSET * direction;
 }
 
 void drive_right(short direction, short speed) {
     motor [left_motor] = (-speed * VEERING_OFFSET) * direction;
-    motor [right_motor] = speed * direction / VEERING_OFFSET;
+    motor [right_motor] = speed * direction;
 }
 
 void drive_distance(short direction, short distance) {
