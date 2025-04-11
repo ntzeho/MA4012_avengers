@@ -124,7 +124,7 @@ void robot_state_machine() {
         detected_state = HOME;
     }
     else if (line_sensor_state > 0) {
-        if (previous_executed_robot_state == BALL_DETECTED_COLLECT_BALL) {
+        if (previous_executed_robot_state == BALL_DETECTED && !ball_collected) {
             detected_state = LINE_SENSOR_DETECTED_BALL_DETECTED_COLLECT_BALL;
         }
         else if (previous_executed_robot_state == BALL_COLLECTED_NO_ROBOT) {detected_state = LINE_SENSOR_DETECTED_BALL_COLLECTED;}

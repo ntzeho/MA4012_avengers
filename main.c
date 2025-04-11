@@ -27,6 +27,7 @@ char start_position = 'R';   //starting position of robot, default at right side
 bool ball_collected = false; //true when ball is collected
 short robot_home_turn_to_north = 0; //no of times robot has made the turn to north
 short robot_rear_detected_count = 0; //no of times robot has detected rear robot when returning to base
+short ball_search_time = 0;
 bool ball_search_first_ball = true; //false when first ball search has been done once
 
 //-----debugging variables
@@ -47,16 +48,25 @@ void reset_impt_variables() {
 	switch(robot_state){
 		case BALL_SEARCH_FIRST_BALL:
 			break;
-		
+
 		case BALL_COLLECTED_NO_ROBOT:
 			ball_search_first_ball = false;
 			boundary_ball_count = 0;
 			break;
-		
+
 		case LINE_SENSOR_DETECTED_BALL_DETECTED_COLLECT_BALL:
+		case BALL_DETECTED:
 			ball_search_first_ball = false;
 			robot_home_turn_to_north = 0;
 			break;
+
+		case BALL_SEARCH_NO_ROBOT:
+			if (ball_search_time > 3000) {
+				boundary_ball_count = 0;
+			}
+			ball_search_first_ball = false;
+			robot_home_turn_to_north = 0;
+
 
 		default:
 			ball_search_first_ball = false;
@@ -80,11 +90,13 @@ task action() {
 
 			case BALL_SEARCH_NO_ROBOT:
 				writeDebugStreamLine("BALL_SEARCH_NO_ROBOT");
+				clearTimer(T4);
 				reset_impt_variables();
 				executed_robot_state = BALL_SEARCH_NO_ROBOT;
 				// motor [ball_in_motor] = 0;
 				ball_scanning();
 				previous_executed_robot_state = BALL_SEARCH_NO_ROBOT;
+				ball_search_time = time1[T4];
 				break;
 
 			case BALL_DETECTED: //drive towards ball
@@ -145,7 +157,7 @@ task action() {
 					motor [ball_out_motor] = -DEFAULT_BALL_MOTOR_SPEED;
 					sleep(TIME_TO_LOCK_BALL); //lock the collected ball in place
 					motor [ball_out_motor] = 0;
-					motor [ball_in_motor] = DEFAULT_BALL_MOTOR_SPEED; //spin the ball in motor in the opp direction to kick out nay extra balls
+
 				}
 				/*
 				if (previous_executed_robot_state != BALL_COLLECTED_NO_ROBOT){ //only stop when the prev executed robot state is not the same
@@ -160,6 +172,10 @@ task action() {
 						clearTimer(T3); //clear timer ready to measure time taken to reach home
 
 					case 1: //adjust orientation only when robot has only turned 0 or 1 times previously
+					case 2:
+					case 3:
+					case 4:
+					case 5:
 						is_turning = true;
 						turn_to_north_home();
 						is_turning = false;
@@ -167,8 +183,8 @@ task action() {
 					default:
 						break;
 				}
-
-				motor [ball_in_motor] = 0;
+				motor [ball_in_motor] = DEFAULT_BALL_MOTOR_SPEED; //spin the ball in motor in the opp direction to kick out nay extra balls
+				//motor [ball_in_motor] = 0;
 				if (executed_robot_state == robot_state) {drive(-1, DEFAULT_MOTOR_HOME_DRIVING_SPEED);}
 				previous_executed_robot_state = BALL_COLLECTED_NO_ROBOT;
 				break;
