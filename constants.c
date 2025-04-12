@@ -11,9 +11,11 @@ const float LEFT_MOTOR_OFFSET_STRAIGHT = 0.6; //ensure robots drives straight
 const float RIGHT_MOTOR_OFFSET_TURNING = 1.5; //ensures both motors spin when driving
 const float VEERING_OFFSET = 1.75; //greater than 1 means veer more
 
+const short START_MOVE_FIELD_DISTANCE_EXTRA = 175;
 const short START_MOVE_FIELD_DISTANCE = 150;
 const short END_MOVE_FIELD_DISTANCE = 120;
 
+const short START_MOVE_FIELD_TIME_EXTRA = 2200;
 const short START_MOVE_FIELD_TIME = 2000;
 const short END_MOVE_FIELD_TIME = 2000;
 const short TIME_TO_TRAVEL_10_CM = 350;

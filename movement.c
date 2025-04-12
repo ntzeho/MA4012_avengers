@@ -89,6 +89,11 @@ void drive_distance_fixed(short direction, short distance) {
             drive(direction, DEFAULT_MOTOR_START_DRIVING_SPEED);
             sleep(START_MOVE_FIELD_TIME);
             break;
+
+        case START_MOVE_FIELD_DISTANCE_EXTRA:
+            drive(direction, DEFAULT_MOTOR_START_DRIVING_SPEED);
+            sleep(START_MOVE_FIELD_TIME_EXTRA);
+            break;
     }
     stop_movement();
 }
@@ -400,7 +405,9 @@ void turn_angle(short direction, short angle) {
 void move_field() { //move to just over halfway point to begin searching for balls
     switch (ball_count) {
         case 0:
-            drive_distance_fixed(1, START_MOVE_FIELD_DISTANCE);
+            if (start_move_more) {drive_distance_fixed(1, START_MOVE_FIELD_DISTANCE_EXTRA);}
+            else {drive_distance_fixed(1, START_MOVE_FIELD_DISTANCE);}
+            if (start_right_turn) {turn_angle(1, 45);}
             break;
         
         case 1:
