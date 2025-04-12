@@ -34,6 +34,7 @@ robotState detected_state = START;
 robotState previous_detected_state = START;
 int state_counter = 0;
 
+/*
 bool bumper_home_check() {
     if (SensorValue [bumper_L] == 1 && SensorValue [bumper_R] == 1) {return true;}
     else if (SensorValue [bumper_L] == 1) {
@@ -52,6 +53,7 @@ bool bumper_home_check() {
     }
     return false;
 }
+*/
 
 bool line_sensor_state_check() {
     if (robot_state == BALL_DETECTED) {return false;};

@@ -12,8 +12,8 @@
 #pragma config(Sensor, dgtl8,  line_BL,        sensorDigitalIn)
 #pragma config(Sensor, dgtl9,  line_BR,        sensorDigitalIn)
 #pragma config(Sensor, dgtl10, ball_switch,    sensorTouch)
-#pragma config(Sensor, dgtl11, bumper_L,       sensorTouch)
-#pragma config(Sensor, dgtl12, bumper_R,       sensorTouch)
+#pragma config(Sensor, dgtl11, straight_switch, sensorTouch)
+#pragma config(Sensor, dgtl12, turn_R_switch,  sensorTouch)
 #pragma config(Motor,  port2,           left_motor,    tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port4,           ball_out_motor, tmotorServoContinuousRotation, openLoop)
 #pragma config(Motor,  port5,           ball_in_motor, tmotorServoContinuousRotation, openLoop)
@@ -29,6 +29,9 @@ short robot_home_turn_to_north = 0;   //no of times robot has made the turn to n
 short robot_rear_detected_count = 0;  //no of times robot has detected rear robot when returning to base
 short ball_search_time = 0;           //duration of robot staying in BALL_SEARCH_NO_ROBOT state
 bool ball_search_first_ball = true;   //false when first ball search has been done once
+
+bool start_move_more = false;         //true when robot should move more than START_MOVE_FIELD_DISTANCE at start of competition
+bool start_right_turn = false;        //true when robot should turn right at start of competition after going straight
 
 //-----debugging variables
 bool is_turning = false;
@@ -59,7 +62,11 @@ task full_stop() { // stop all tasks and movements except for emergency_stop and
 }
 
 void wait_for_on() {
-	while (SensorValue [on_switch] == 0) {/* Nothing is executed when limit switch isn't pressed */}
+	while (SensorValue [on_switch] == 0) { //while on switch has yet to be pressed
+		if (SensorValue [straight_switch] == 1) {start_move_more = true;}
+		if (SensorValue [turn_R_switch] == 1) {start_right_turn = true;}
+	}
+
 	if (cycles == 0) {clearTimer(T1);}
 	while (SensorValue [on_switch] == 1) {sleep(100);}
 	cycles++;
