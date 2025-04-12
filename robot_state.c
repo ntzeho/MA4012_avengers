@@ -120,14 +120,12 @@ bool ball_check() {
 }
 
 void robot_state_machine() {
-    if ((SensorValue [ball_switch] == 1 || ball_collected) && robot_orientation == NORTH && line_sensor_home_check()) {
+    if (ball_collected && robot_orientation == NORTH && line_sensor_home_check()) {
         detected_state = HOME;
     }
     else if (line_sensor_state > 0) {
-        if (previous_executed_robot_state == BALL_DETECTED && !ball_collected) {
-            detected_state = LINE_SENSOR_DETECTED_BALL_DETECTED_COLLECT_BALL;
-        }
-        else if (previous_executed_robot_state == BALL_COLLECTED_NO_ROBOT || ball_collected) {detected_state = LINE_SENSOR_DETECTED_BALL_COLLECTED;}
+        if (ball_collected) {detected_state = LINE_SENSOR_DETECTED_BALL_COLLECTED;}
+        else if (previous_executed_robot_state == BALL_DETECTED) {detected_state = LINE_SENSOR_DETECTED_BALL_DETECTED_COLLECT_BALL;}
         else {detected_state = LINE_SENSOR_DETECTED;}
     }
     // else if (distance_ball_front < ROBOT_BALL_SHORT_DISTANCE_THRESHOLD && !ball_collected && distance_robot_front > (distance_ball_front + ROBOT_SENSOR_DIFF_THRESHOLD)) {
@@ -162,7 +160,7 @@ void robot_state_machine() {
     else if (!ball_collected && distance_robot_front < ROBOT_FRONT_DISTANCE_THRESHOLD) {
         detected_state = ROBOT_FRONT_DETECTED_BALL_OUT;
     }
-    else if ((SensorValue [ball_switch] == 1 || ball_collected) && distance_robot_front >= ROBOT_FRONT_DISTANCE_THRESHOLD && time1[T3] > ROBOT_REAR_DETECTED_TIMER) {
+    else if (ball_collected && distance_robot_front >= ROBOT_FRONT_DISTANCE_THRESHOLD && time1[T3] > ROBOT_REAR_DETECTED_TIMER) {
         detected_state = ROBOT_REAR_DETECTED_BALL_IN;
     }
     else if ((SensorValue [ball_switch] == 1 || ball_collected) && distance_robot_front >= ROBOT_FRONT_DISTANCE_THRESHOLD) {
@@ -184,4 +182,8 @@ void robot_state_machine() {
         state_counter = 1;
     }
     sleep (50);
+}
+
+task robot_state_manager() {
+	while (true) {robot_state_machine();}
 }

@@ -127,3 +127,11 @@ void get_line_sensor_state() {
     BR = !SensorValue[line_BR] << 3; //8
     line_sensor_state = FL | FR | BL | BR;
 }
+
+task detection() {
+	while (true) {
+		distance_calculator();
+		get_direction();
+		get_line_sensor_state();
+	}
+}

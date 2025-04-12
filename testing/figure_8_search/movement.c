@@ -368,17 +368,6 @@ void turn_360_degrees() {
     stop_movement();
 }
 
-void turn_360_degrees_with_pause() {
-    short i = 1;
-    while (i <= 8 && executed_robot_state == robot_state) {
-        turn(-1, FAST_MOTOR_TURNING_SPEED);
-        sleep(TURNING_TIME);
-        stop_movement();
-        sleep_with_state_detection(DETECTION_TIME);
-        i++;
-    }
-}
-
 void turn_angle(short direction, short angle) {
     //assuming 1 is forward and -1 is backward:
     //direction = 1 means turn right, direction = -1 means turn left
@@ -405,7 +394,7 @@ void move_field() { //move to just over halfway point to begin searching for bal
         
         case 1:
             drive_distance_fixed(1, START_MOVE_FIELD_DISTANCE);
-            //turn_90_degrees_L();
+            turn_90_degrees_L();
 
             //movement to centre sector with appropriate turning depending on start_position value
             // if (start_position == 'L') {
@@ -426,25 +415,6 @@ void move_field() { //move to just over halfway point to begin searching for bal
     stop_movement();
 }
 
-void drive_distance_robot_rear() {
-    drive(1, DEFAULT_MOTOR_DRIVING_SPEED);
-    clearTimer(T1);
-    while (robot_state != LINE_SENSOR_DETECTED_BALL_COLLECTED && time1[T1] < TIME_TO_TRAVEL_30_CM) {}
-    stop_movement();
-
-    if (robot_state != LINE_SENSOR_DETECTED_BALL_COLLECTED) {
-        if (robot_rear_detected_count % 2 == 0) {turn_angle(1, 45);}
-        else {turn_angle(-1, 45);}
-        robot_rear_detected_count++;
-
-        drive(1, DEFAULT_MOTOR_DRIVING_SPEED);
-        clearTimer(T1);
-        while (robot_state != LINE_SENSOR_DETECTED_BALL_COLLECTED && time1[T1] < TIME_TO_TRAVEL_60_CM) {}
-        stop_movement();
-    }
-    
-}
-
 void collect_ball() {
     motor [ball_in_motor] = -DEFAULT_BALL_MOTOR_SPEED;
     // drive(1, SLOW_MOTOR_DRIVING_SPEED);
@@ -461,10 +431,262 @@ void deposit_ball() {
 void ball_scanning() {
     if(executed_robot_state == robot_state) {
         is_turning_360 = true;
-        //turn_360_degrees();
-        turn_360_degrees_with_pause();
+        turn_360_degrees();
     }
     drive_distance(1, 60);
     // stop_movement();
     is_turning_360 = false;
+}
+
+void turn_360_degrees_with_pause() {
+    for (short i = 1; i <= 8; ++i) {
+        turn(-1, FAST_MOTOR_TURNING_SPEED);
+        sleep(TURNING_TIME);
+        motor [left_motor] = 0;
+        motor [right_motor] = 0;
+        sleep_with_state_detection(DETECTION_TIME);
+    }
+}
+
+void figure_8_search() {
+    short turn_count = 0;
+    switch (figure_8_search_state) {
+        case 1: //NORTH | top right
+            while (executed_robot_state == robot_state && turn_count <= 3) {
+                switch (turn_count) {
+                    case 0:
+                        turn_angle(-1, 45);
+                        break;
+
+                    case 1:
+                        turn_angle(-1, 90);
+                        break;
+
+                    case 2:
+                        turn_angle(1, 180);
+                        break;
+
+                    case 3:
+                        turn_to_west();
+                }
+                sleep_with_state_detection(DETECTION_TIME);
+                turn_count++;
+            }
+            
+            if (executed_robot_state == robot_state) {
+                drive_distance(1, 60);
+                figure_8_search_state++;
+                break;
+            }
+            
+
+        case 2: //WEST | top left
+            while (executed_robot_state == robot_state && turn_count <= 3) {
+                switch (turn_count) {
+                    case 0:
+                        turn_angle(1, 45);
+                        break;
+
+                    case 1:
+                        turn_to_north();
+                        break;
+
+                    case 2:
+                        turn_angle(1, 45);
+                        break;
+
+                    case 3:
+                        turn_to_south();
+                }
+                sleep_with_state_detection(DETECTION_TIME);
+                turn_count++;
+            }
+            
+            if (executed_robot_state == robot_state) {
+                drive_distance(1, 60);
+                figure_8_search_state++;
+                break;
+            }
+            
+
+        case 3: //SOUTH | middle left
+            while (executed_robot_state == robot_state && turn_count <= 3) {
+                switch (turn_count) {
+                    case 0:
+                        turn_to_west();
+                        break;
+
+                    case 1:
+                        turn_angle(1, 45);
+                        break;
+
+                    case 2:
+                        turn_angle(1, 90);
+                        break;
+
+                    case 3:
+                        turn_to_east();
+                }
+                sleep_with_state_detection(DETECTION_TIME);
+                turn_count++;
+            }
+            
+            if (executed_robot_state == robot_state) {
+                drive_distance(1, 60);
+                figure_8_search_state++;
+                break;
+            }
+            
+
+        case 4: //EAST | middle right
+            while (executed_robot_state == robot_state && turn_count <= 3) {
+                switch (turn_count) {
+                    case 0:
+                        turn_angle(-1, 45);
+                        break;
+
+                    case 1:
+                        turn_to_north();
+                        break;
+
+                    case 2:
+                        turn_angle(-1, 45);
+                        break;
+
+                    case 3:
+                        turn_to_south();
+                }
+                sleep_with_state_detection(DETECTION_TIME);
+                turn_count++;
+            }
+            
+            if (executed_robot_state == robot_state) {
+                drive_distance(1, 60);
+                figure_8_search_state++;
+                break;
+            }
+            
+
+        case 5: //SOUTH | bottom right
+            while (executed_robot_state == robot_state && turn_count <= 3) {
+                switch (turn_count) {
+                    case 0:
+                        turn_to_east();
+                        break;
+
+                    case 1:
+                        turn_angle(-1, 45);
+                        break;
+
+                    case 2:
+                        turn_angle(-1, 90);
+                        break;
+
+                    case 3:
+                        turn_to_west();
+                }
+                sleep_with_state_detection(DETECTION_TIME);
+                turn_count++;
+            }
+            
+            if (executed_robot_state == robot_state) {
+                drive_distance(1, 60);
+                figure_8_search_state++;
+                break;
+            }
+            
+
+        case 6: //WEST | bottom left
+            while (executed_robot_state == robot_state && turn_count <= 3) {
+                switch (turn_count) {
+                    case 0:
+                        turn_angle(-1, 45);
+                        break;
+
+                    case 1:
+                        turn_angle(-1, 180);
+                        break;
+
+                    case 2:
+                        turn_angle(-1, 90);
+                        break;
+
+                    case 3:
+                        turn_to_north();
+                }
+                sleep_with_state_detection(DETECTION_TIME);
+                turn_count++;
+            }
+            
+            if (executed_robot_state == robot_state) {
+                drive_distance(1, 60);
+                figure_8_search_state++;
+                break;
+            }
+            
+
+        case 7: //NORTH | middle left
+            while (executed_robot_state == robot_state && turn_count <= 3) {
+                switch (turn_count) {
+                    case 0:
+                        turn_angle(-1, 45);
+                        break;
+
+                    case 1:
+                        turn_angle(-1, 180);
+                        break;
+
+                    case 2:
+                        turn_angle(-1, 90);
+                        break;
+
+                    case 3:
+                        turn_to_east();
+                }
+                sleep_with_state_detection(DETECTION_TIME);
+                turn_count++;
+            }
+            
+            if (executed_robot_state == robot_state) {
+                drive_distance(1, 60);
+                figure_8_search_state++;
+                break;
+            }
+            
+
+        case 8:
+            while (executed_robot_state == robot_state && turn_count <= 3) {
+                switch (turn_count) {
+                    case 0:
+                        turn_angle(1, 45);
+                        break;
+
+                    case 1:
+                        turn_angle(1, 90);
+                        break;
+
+                    case 2:
+                        turn_angle(1, 90);
+                        break;
+
+                    case 3:
+                        turn_to_north();
+                }
+                sleep_with_state_detection(DETECTION_TIME);
+                turn_count++;
+            }
+            
+            if (executed_robot_state == robot_state) {
+                drive_distance(1, 60);
+                figure_8_search_state = 1;
+                break;
+            }
+            
+
+    }
+
+}
+
+void determine_figure_8_state() {
+    
 }
