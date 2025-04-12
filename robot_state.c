@@ -183,5 +183,5 @@ void robot_state_machine() {
         robot_state = detected_state;
         state_counter = 1;
     }
-
+    sleep (50);
 }

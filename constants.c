@@ -49,7 +49,7 @@ const short FRONT_DIST_CORRECT_VALUE = 3;
 const short MAX_BOUNDARY_BALL_TRIES = 3;
 
 const short HOMING_BOTH_SIDES_CHECK_TIME = 500;
-const short TIME_TO_LOCK_BALL = 300;
+// const short TIME_TO_LOCK_BALL = 300; //NOT USED
 const short TIME_TO_SPIT_BALL = 750;
 const short ROBOT_REAR_DETECTED_TIMER = 10000;
 

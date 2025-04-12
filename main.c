@@ -116,15 +116,15 @@ task action() {
 				motor [ball_in_motor] = -DEFAULT_BALL_MOTOR_SPEED;
 				// only right side detected and left and center not detected
 				if (distance_ball_front_right < ROBOT_BALL_DISTANCE_THRESHOLD && distance_ball_front_left > ROBOT_BALL_DISTANCE_THRESHOLD){ //distance_ball_front_center > ROBOT_BALL_DISTANCE_THRESHOLD
-					drive_left(1,DEFAULT_MOTOR_DRIVING_SPEED);
+					drive_left(1,SLOW_MOTOR_DRIVING_SPEED);
 					writeDebugStreamLine("Veer Left");
 				} // only left side detected and right and center not detected
 				else if  (distance_ball_front_right > ROBOT_BALL_DISTANCE_THRESHOLD && distance_ball_front_left < ROBOT_BALL_DISTANCE_THRESHOLD){
-					drive_right(1,DEFAULT_MOTOR_DRIVING_SPEED);
+					drive_right(1,SLOW_MOTOR_DRIVING_SPEED);
 					writeDebugStreamLine("Veer Right");
 				}
 				else {
-					drive(1, DEFAULT_MOTOR_DRIVING_SPEED);
+					drive(1, SLOW_MOTOR_DRIVING_SPEED);
 					writeDebugStreamLine("Straight");
 				}
 
