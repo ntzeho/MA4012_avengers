@@ -96,9 +96,9 @@ void react_to_line_sensors_collect_ball() {
                 drive_distance_fixed(-1, 30);
                 boundary_ball_count++;
             } else {
-                boundary_ball_count = 0;
                 drive_distance_fixed(-1, 30);
                 turn_90_degrees_L();
+                boundary_ball_count = 0;
                 // turn_90_degrees_L();
             }
         case 2: // FR
@@ -110,9 +110,9 @@ void react_to_line_sensors_collect_ball() {
                 drive_distance_fixed(-1, 30);
                 boundary_ball_count++;
             } else {
-                boundary_ball_count = 0;
                 drive_distance_fixed(-1, 30);
                 turn_90_degrees_L();
+                boundary_ball_count = 0;
             }
             
             break;
@@ -129,9 +129,9 @@ void react_to_line_sensors_collect_ball() {
                 drive_distance_fixed(-1, 30);
                 boundary_ball_count++;
             } else {
-                boundary_ball_count = 0;
                 drive_distance_fixed(-1, 30);
                 turn_90_degrees_L();
+                boundary_ball_count = 0;
             }
             break;
             
@@ -176,13 +176,21 @@ void react_to_line_sensors_homing() {
         case 11: // FL | FR | BR
             drive_distance_fixed(-1, 10);
             break;
+
+        case 6: // FR | BL
+            turn_angle(-1, 45);
+            drive_distance_fixed(1, 30);
+            break;
+
+        case 9: // FL | BR
+            turn_angle(1, 45);
+            drive_distance_fixed(1, 30);
+            break;
         
         default:
             /*
             case 0: // NONE
-            case 6: // FR | BL
             case 5: // FL | BL
-            case 9: // FL | BR
             case 10: // FR | BR
             case 15: // ALL, enemy robot has their own yellow lines
             */
