@@ -57,7 +57,7 @@ bool bumper_home_check() {
 
 bool line_sensor_state_check() {
     if (robot_state == BALL_DETECTED) { //return true when ball detected but robot currently evading from line and alr try max times
-        return (executed_robot_state == LINE_SENSOR_DETECTED_BALL_DETECTED_COLLECT_BALL && boundary_ball_count >= MAX_BOUNDARY_BALL_TRIES)
+        return (executed_robot_state == LINE_SENSOR_DETECTED_BALL_DETECTED_COLLECT_BALL && boundary_ball_count >= MAX_BOUNDARY_BALL_TRIES);
     }
     switch (executed_robot_state) {
         case LINE_SENSOR_DETECTED:
