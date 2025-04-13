@@ -411,11 +411,12 @@ void move_field() { //move to just over halfway point to begin searching for bal
             break;
         
         case 1:
-            if (start_position == 'L' && !start_right_turn) {
-                //first ball was collected from left sector, so second ball in center sector
+            if (start_position == 'L') {
                 drive_distance_fixed(1, START_MOVE_FIELD_DISTANCE_EXTRA);
-                turn_90_degrees_R();
-                drive_distance(1, 60);
+                if (!start_right_turn) { //first ball was collected from left sector, so second ball in center sector
+                    turn_90_degrees_R();
+                    drive_distance(1, 60);
+                }
             } else {drive_distance_fixed(1, START_MOVE_FIELD_DISTANCE);}
             
             //turn_90_degrees_L();
