@@ -1,3 +1,16 @@
+/*
+Summary of functions of timers
+T1 - Start switch timer. Allows us to select robot to turn left or right.
+
+T2 - Home Check time. Allows for some delay between the 2 rear line sensors detecting to ensure we are home.
+
+T3 - Robot rear detection time. If we are stuck trying to move back to home for a long time, means
+we have collided with another robot and shld take evasive action.
+
+T4 - Ball search time. Tracks how long it has been since we are searching for a ball.
+Resets the boundary ball count if we are searching for ball for a long time.
+*/
+
 void reset_impt_variables() {
 	switch(robot_state){
 		case BALL_SEARCH_FIRST_BALL:
@@ -59,12 +72,12 @@ task action() {
 				writeDebugStreamLine("BALL_DETECTED");
 				reset_impt_variables();
 				executed_robot_state = BALL_DETECTED;
-				/*
+				
 				if (previous_executed_robot_state != robot_state){
-					stop_movement();
-					turn(1,DEFAULT_MOTOR_TURNING_SPEED);
-					sleep(50);
-					stop_movement();}*/
+					// stop_movement();
+					// turn(1,DEFAULT_MOTOR_TURNING_SPEED);
+					// sleep(50);
+					stop_movement();}
 
 				motor [ball_in_motor] = -DEFAULT_BALL_MOTOR_SPEED;
 				// only right side detected and left and center not detected
