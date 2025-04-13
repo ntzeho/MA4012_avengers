@@ -91,16 +91,6 @@ bool line_sensor_home_check() {
     return false;
 }
 
-bool robot_orientation_home_check() {
-    switch (robot_orientation) {
-        case NORTH:
-        case NORTHEAST:
-        case NORTHWEST:
-            return true;
-    }
-    return false;
-}
-
 bool robot_orientation_rejection_check() {
     switch (robot_orientation) {
         case SOUTH:

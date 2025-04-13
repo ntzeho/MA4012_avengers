@@ -411,7 +411,13 @@ void move_field() { //move to just over halfway point to begin searching for bal
             break;
         
         case 1:
-            drive_distance_fixed(1, START_MOVE_FIELD_DISTANCE);
+            if (start_position == 'L' && !start_right_turn) {
+                //first ball was collected from left sector, so second ball in center sector
+                drive_distance_fixed(1, START_MOVE_FIELD_DISTANCE_EXTRA);
+                turn_90_degrees_R();
+                drive_distance(1, 60);
+            } else {drive_distance_fixed(1, START_MOVE_FIELD_DISTANCE);}
+            
             //turn_90_degrees_L();
 
             //movement to centre sector with appropriate turning depending on start_position value
@@ -452,11 +458,6 @@ void drive_distance_robot_rear() {
     
 }
 
-void collect_ball() {
-    motor [ball_in_motor] = -DEFAULT_BALL_MOTOR_SPEED;
-    // drive(1, SLOW_MOTOR_DRIVING_SPEED);
-}
-
 void deposit_ball() {
     motor [ball_in_motor] = -DEFAULT_BALL_MOTOR_SPEED; 
     motor [ball_out_motor] = -DEFAULT_BALL_MOTOR_SPEED;
@@ -468,8 +469,8 @@ void deposit_ball() {
 void ball_scanning() {
     if(executed_robot_state == robot_state) {
         is_turning_360 = true;
-        //turn_360_degrees();
-        turn_360_degrees_with_pause();
+        turn_360_degrees();
+        //turn_360_degrees_with_pause();
     }
     drive_distance(1, 60);
     // stop_movement();
