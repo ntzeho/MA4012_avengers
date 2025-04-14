@@ -143,7 +143,7 @@ void robot_state_machine() {
     //     // detected ball 
     //     else {detected_state = BALL_DETECTED;}
     // }
-    else if (ball_check() && !ball_collected && distance_robot_front > (distance_ball_front_center + ROBOT_SENSOR_DIFF_THRESHOLD)) {
+    else if (ball_check() && !ball_collected && distance_robot_front > (distance_ball_front_right + ROBOT_SENSOR_DIFF_THRESHOLD)) {
         detected_state = BALL_DETECTED;
     // } else if (ball_check(ROBOT_BALL_SHORT_DISTANCE_THRESHOLD) && !ball_collected && distance_robot_front > (distance_ball_front_right + ROBOT_SENSOR_DIFF_THRESHOLD)) {
     //     detected_state = BALL_DETECTED_COLLECT_BALL;

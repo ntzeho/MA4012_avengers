@@ -94,6 +94,11 @@ void drive_distance_fixed(short direction, short distance) {
             drive(direction, DEFAULT_MOTOR_START_DRIVING_SPEED);
             sleep(START_MOVE_FIELD_TIME_EXTRA);
             break;
+
+        case START_MOVE_FIELD_DISTANCE_EXTRA_EXTRA:
+            drive(direction, DEFAULT_MOTOR_START_DRIVING_SPEED);
+            sleep(START_MOVE_FIELD_TIME_EXTRA_EXTRA);
+            break;
     }
     stop_movement();
 }
@@ -340,8 +345,8 @@ void turn_90_degrees_L() {
             turn_to_south();
             break;
 
-        default:
-            reorientate_L();
+        // default:
+        //     reorientate_L();
     }
 }
 
@@ -384,6 +389,24 @@ void turn_360_degrees_with_pause() {
     }
 }
 
+void turn_angle_with_state_detection(short direction, short angle) {
+    //assuming 1 is forward and -1 is backward:
+    //direction = 1 means turn right, direction = -1 means turn left
+    turn(direction, DEFAULT_MOTOR_TURNING_SPEED);
+    switch (angle) {
+        case 20:
+            sleep_with_state_detection(ROTATE_20_DEGREES_SLEEP);
+            break;
+
+        case 45:
+            sleep_with_state_detection(ROTATE_45_DEGREES_SLEEP);
+            //sleep_with_state_detection(ROTATE_45_DEGREES_SLEEP);
+            break;
+    }
+    
+    stop_movement();
+}
+
 void turn_angle(short direction, short angle) {
     //assuming 1 is forward and -1 is backward:
     //direction = 1 means turn right, direction = -1 means turn left
@@ -411,13 +434,21 @@ void move_field() { //move to just over halfway point to begin searching for bal
             break;
         
         case 1:
+
             if (start_position == 'L') {
-                drive_distance_fixed(1, START_MOVE_FIELD_DISTANCE_EXTRA);
+                drive(1, DEFAULT_MOTOR_START_DRIVING_SPEED);
+                clearTimer(T1);
+                while (robot_state != LINE_SENSOR_DETECTED && time1[T1] < START_MOVE_FIELD_TIME_EXTRA_EXTRA) {}
+
                 if (!start_right_turn) { //first ball was collected from left sector, so second ball in center sector
                     turn_90_degrees_R();
                     drive_distance(1, 60);
                 }
-            } else {drive_distance_fixed(1, START_MOVE_FIELD_DISTANCE);}
+            } else {
+                drive(1, DEFAULT_MOTOR_START_DRIVING_SPEED);
+                clearTimer(T1);
+                while (robot_state != LINE_SENSOR_DETECTED && time1[T1] < START_MOVE_FIELD_TIME_EXTRA) {}
+            }
             
             //turn_90_degrees_L();
 
@@ -468,9 +499,13 @@ void deposit_ball() {
 }
 
 void ball_scanning() {
+    if (previous_executed_robot_state == LINE_SENSOR_DETECTED) {
+        drive_distance(1, 60);
+    }
     if(executed_robot_state == robot_state) {
         is_turning_360 = true;
         turn_360_degrees();
+        //turn_angle_with_state_detection(-1, 45);
         //turn_360_degrees_with_pause();
     }
     drive_distance(1, 60);

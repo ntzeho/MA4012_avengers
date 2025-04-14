@@ -37,6 +37,13 @@ void reset_impt_variables() {
 			clearTimer(T3);
 			break;
 
+		case HOME:
+			ball_search_first_ball = false;
+			robot_home_turn_to_north = 0;
+			boundary_ball_count = 0;
+			clearTimer(T3);
+			break;
+
 		default:
 			ball_search_first_ball = false;
 			robot_home_turn_to_north = 0;

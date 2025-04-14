@@ -75,7 +75,8 @@ void distance_calculator() {
     voltage_ball_front_right = (SensorValue [dist_ball_front_right]) * (5.0 / 4096.0);
     voltage_ball_front_left = (SensorValue [dist_ball_front_left]) * (5.0 / 4096.0);
 
-    distance_ball_front_center_temp = pow(2.718281828, 3.091) * pow(voltage_ball_front_center, -0.9937);
+    //distance_ball_front_center_temp = pow(2.718281828, 3.091) * pow(voltage_ball_front_center, -0.9937);
+    distance_ball_front_center_temp = 27.534 * pow(voltage_ball_front_right , -1.207);
     distance_ball_front_left_temp = pow(2.718281828, 3.094) * pow(voltage_ball_front_left , -1.838);
     distance_ball_front_right_temp = pow(2.718281828, 3.276) * pow(voltage_ball_front_right , -1.081);
 
@@ -109,7 +110,7 @@ void distance_calculator() {
     else{distance_ball_front_right = ROBOT_BALL_DISTANCE_THRESHOLD + 100;}
 
     //dist rejection for front right
-    if (distance_ball_front_center_temp <= ROBOT_BALL_DISTANCE_THRESHOLD) {distance_ball_front_counter_center++;}
+    if (distance_ball_front_center_temp <= ROBOT_BALL_CENTER_DISTANCE_THRESHOLD) {distance_ball_front_counter_center++;}
     else {distance_ball_front_counter_center = 1;}
 
     if (distance_ball_front_counter_center >= FRONT_DIST_CORRECT_VALUE){

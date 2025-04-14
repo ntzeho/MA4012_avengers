@@ -1,28 +1,37 @@
 void react_to_line_sensors() {
     switch (line_sensor_state) {
         case 1: // FL
+        case 2: // FR
             //reverse and turn right to align with nearest orientation
-            stop_movement();
-            drive_distance_fixed(-1, 30);
-            //reorientate_R();
-            turn_90_degrees_L();
-            //turn_90_degrees_R();
+            
+            if (robot_orientation == SOUTH) {
+                stop_movement();
+                drive_distance_fixed(-1, 30);
+                turn_to_north();
+                drive_distance(1, START_MOVE_FIELD_DISTANCE);
+            } else {
+                stop_movement();
+                drive_distance_fixed(-1, 30);
+                //reorientate_R();
+                turn_90_degrees_L();
+                //turn_90_degrees_R();
+            }
             break;
 
-        case 2: // FR  
-            //reverse and turn left to align with nearest orientation
-            stop_movement();
-            drive_distance_fixed(-1, 30);
-            //reorientate_L();
-            turn_90_degrees_L();
-            break;
 
         case 3: // FL | FR
-            stop_movement();         
-            drive_distance_fixed(-1, 30);
-            turn_90_degrees_L();
+            if (robot_orientation == SOUTH) {
+                stop_movement();
+                drive_distance_fixed(-1, 30);
+                turn_to_north();
+                drive_distance(1, START_MOVE_FIELD_DISTANCE);
+            } else {
+                stop_movement();         
+                drive_distance_fixed(-1, 30);
+                turn_90_degrees_L();
+            }
             break;
-
+            
         case 4: // BL
             //drive forward and turn right to align with nearest orientation
             stop_movement();
@@ -92,7 +101,7 @@ void react_to_line_sensors_collect_ball() {
     switch (line_sensor_state) {
         case 1: // FL
             if (boundary_ball_count < MAX_BOUNDARY_BALL_TRIES ) {
-                drive_distance_fixed(1, 15);
+                drive_distance_fixed(1, 10);
                 drive_distance_fixed(-1, 30);
                 boundary_ball_count++;
             } else {
@@ -106,7 +115,7 @@ void react_to_line_sensors_collect_ball() {
         // case 7: // FL | FR | BL
         // case 11: // FL | FR | BR
             if (boundary_ball_count < MAX_BOUNDARY_BALL_TRIES ) {
-                drive_distance_fixed(1, 15);
+                drive_distance_fixed(1, 10);
                 drive_distance_fixed(-1, 30);
                 boundary_ball_count++;
             } else {
@@ -125,7 +134,7 @@ void react_to_line_sensors_collect_ball() {
                 drive_distance_fixed(-1, 30);
                 turn_to_north();
             } else if (boundary_ball_count < MAX_BOUNDARY_BALL_TRIES){
-                drive_distance_fixed(1, 15);
+                drive_distance_fixed(1, 10);
                 drive_distance_fixed(-1, 30);
                 boundary_ball_count++;
             } else {

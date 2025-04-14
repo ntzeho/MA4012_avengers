@@ -1,3 +1,4 @@
+#pragma config(Sensor, in1,    right_left_switch, sensorAnalog)
 #pragma config(Sensor, in2,    dist_ball_front_center, sensorAnalog)
 #pragma config(Sensor, in3,    dist_ball_front_right, sensorAnalog)
 #pragma config(Sensor, in6,    dist_robot_front, sensorAnalog)
@@ -65,13 +66,14 @@ void wait_for_on() {
 	while (SensorValue [on_switch] == 0) { //while on switch has yet to be pressed
 		if (SensorValue [straight_switch] == 1) {start_move_more = true;}
 		if (SensorValue [turn_R_switch] == 1) {start_right_turn = true;}
+		if (SensorValue [right_left_switch] == 0) {start_position = 'L';}
 	}
 
-	if (cycles == 0) {clearTimer(T1);}
-	while (SensorValue [on_switch] == 1) {sleep(100);}
+	//if (cycles == 0) {clearTimer(T1);}
+	//while (SensorValue [on_switch] == 1) {sleep(100);}
 	cycles++;
 	if (cycles == 1) {
-		if (time1[T1] >= 2000) {start_position = 'L';} // robot start on left position when on switch held for at least 2s
+		//if (time1[T1] >= 2000) {start_position = 'L';} // robot start on left position when on switch held for at least 2s
 		move_field(); //move field only if robot did not start again
 	}
 	startTask(detection);
