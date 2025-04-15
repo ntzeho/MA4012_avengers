@@ -9,14 +9,14 @@
 - main.c - source code importing above files in order
 
 Done by Team Avengers
-Group Members
-Pok Zheng Ning
-Rueben Chong
-Ng Tze Ho
-Joon Chong
-Gabriel Lee
-Caleb Yong
-Collister Chua
-Caleb Chia
-Bryan Chai
-Feng Qi Hao
+
+- Pok Zheng Ning
+- Rueben Chong
+- Ng Tze Ho
+- Joon Chong
+- Gabriel Lee
+- Caleb Yong
+- Collister Chua
+- Caleb Chia
+- Bryan Chai
+- Feng Qi Hao
