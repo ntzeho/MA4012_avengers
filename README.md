@@ -7,3 +7,16 @@
 - sensor_action.c - determine robot action depending on permutations of triggered line sensors
 - robot_action.c - determine robot action depending on robot state
 - main.c - source code importing above files in order
+
+Done by Team Avengers
+Group Members
+Pok Zheng Ning
+Rueben Chong
+Ng Tze Ho
+Joon Chong
+Gabriel Lee
+Caleb Yong
+Collister Chua
+Caleb Chia
+Bryan Chai
+Feng Qi Hao
