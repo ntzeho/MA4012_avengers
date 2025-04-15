@@ -1,6 +1,6 @@
 /*
 Summary of functions of timers
-T1 - Start switch timer. Allows us to select robot to turn left or right. Also used for sleeping with state detection when robot is moving.
+T1 - Timer used for sleeping with state detection when robot is moving.
 
 T2 - Home Check time. Allows for some delay between the 2 rear line sensors detecting to ensure we are home.
 
